@@ -1,0 +1,7 @@
+.nav-logo{
+    transform: rotate(-60deg);
+}
+
+#step-2, #step-3{
+    display: none;
+}

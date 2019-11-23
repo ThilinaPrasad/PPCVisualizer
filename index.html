@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PPC Visualizer</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!-- Material Design Bootstrap -->
+    <link rel="stylesheet" href="css/mdb.min.css">
+    <!-- Your custom styles (optional) -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body style="overflow-x: hidden;">
+
+<!--Navbar -->
+<nav class="mb-1 fixed-top navbar navbar-expand-lg navbar-light warning-color lighten-5">
+    <a class="navbar-brand" href="#">PPC Visualizer</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-4"
+            aria-controls="navbarSupportedContent-4" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent-4">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-info-circle"></i> About</a>
+            </li>
+<!--            <li class="nav-item dropdown">-->
+<!--                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-4" data-toggle="dropdown"-->
+<!--                   aria-haspopup="true" aria-expanded="false">-->
+<!--                    <i class="fas fa-user"></i> Profile </a>-->
+<!--                <div class="dropdown-menu dropdown-menu-right dropdown-info" aria-labelledby="navbarDropdownMenuLink-4">-->
+<!--                    <a class="dropdown-item" href="#">My account</a>-->
+<!--                    <a class="dropdown-item" href="#">Log out</a>-->
+<!--                </div>-->
+<!--            </li>-->
+        </ul>
+    </div>
+</nav>
+<!--/.Navbar -->
+
+<div class="row  mt-lg-5 d-block">
+    <div class="col-md-10 mx-auto d-block  mt-lg-5">
+<!-- Card -->
+<div class="card mx-auto d-block  mt-lg-5 ">
+
+    <!-- Card content -->
+    <div class="card-body">
+
+        <!-- Title -->
+        <h1 class="card-title text-center  mt-4"><a>PPC Visualizer</a></h1>
+        <!-- Text -->
+        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+
+        <!-- Horizontal Steppers -->
+        <ul class="stepper stepper-horizontal ml-5 mr-5 pb-0">
+
+            <!-- First Step -->
+            <li class="active" id="step-indicator-1">
+                <a href="#!">
+                    <span class="circle">1</span>
+                    <span class="label">Beam Type</span>
+                </a>
+
+            </li>
+
+            <!-- Second Step -->
+            <li id="step-indicator-2">
+                <a href="#!">
+                    <span class="circle">2</span>
+                    <span class="label">Geometric Inputs</span>
+                </a>
+            </li>
+
+            <!-- Third Step -->
+            <li id="step-indicator-3">
+                <a href="#!">
+                    <span class="circle">3</span>
+                    <span class="label">Supports</span>
+                </a>
+            </li>
+
+        </ul>
+        <!-- /.Horizontal Steppers -->
+
+        <div class="container" id="step-1" >
+            <h2 class="text-center pb-1">Type of the Beam</h2>
+            <p class="text-center text-warning h5 pb-2">Please select your type of the beam</p>
+            <div class="row m-2">
+            <div class="mx-auto d-block">
+                <img src="img/i.png" class="btn btn-outline-warning p-4" id="type-i" onclick="selectType('i')">
+                <img src="img/t.png" class="btn btn-outline-warning p-4" id="type-t" onclick="selectType('t')">
+               <img src="img/r.png" class="btn btn-outline-warning p-4" id="type-r" onclick="selectType('r')">
+            </div>
+            </div>
+            <h2 align="center" class="p-2"><span class="badge badge-pill badge-warning" id="selected-type">Selected Beam Type : None</span></h2>
+        <button class="btn btn-warning rounded mx-auto d-block" onclick="moveStep(2)">Next <i class="fas fa-forward"></i></button>
+        </div>
+
+        <div class="container" id="step-2" >
+            <h2 class="text-center pb-4">Geometric Measurements of Beam</h2>
+            <div class="row p-2 ">
+                <div class="col-3 text-right h3">a</div>
+                <div class="col-6">
+                    <input type="number" class="form-control" min="0" autofocus>
+                </div>
+                <div class="col-3 text-left pt-2 pl-0">
+                    <label class='h5'>m</label>
+                    <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a>                </div>
+            </div>
+
+            <div class="row p-2">
+                <div class="col-3 text-right h3">b</div>
+                <div class="col-6">
+                    <input type="number" class="form-control" min="0">
+                </div>
+                <div class="col-3 text-left pt-2 pl-0">
+                    <label class='h5'>m</label>
+                    <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a>                </div>
+            </div>
+
+            <div class="row p-2">
+                <div class="col-3 text-right h3">c</div>
+                <div class="col-6">
+                    <input type="number" class="form-control" min="0">
+                </div>
+                <div class="col-3 text-left pt-2 pl-0">
+                    <label class='h5'>m</label>
+                    <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a>                </div>
+            </div>
+
+            <div class="row p-2">
+                <div class="col-3 text-right h3">d</div>
+                <div class="col-6">
+                    <input type="number" class="form-control" min="0">
+                </div>
+                <div class="col-3 text-left pt-2 pl-0">
+                    <label class='h5'>m</label>
+                    <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a>                </div>
+            </div>
+
+            <div class="row p-2">
+                <div class="col-3 text-right h3">e</div>
+                <div class="col-6">
+                    <input type="number" class="form-control" min="0">
+                </div>
+                <div class="col-3 text-left pt-2 pl-0">
+                    <label class='h5'>m</label>
+                    <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a>
+                </div>
+            </div>
+
+            <div class="row">
+            <div class="mx-auto d-block">
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-warning" onclick="moveStep(1)"><i class="fas fa-backward"></i> Previous</button>
+                <button type="button" class="btn btn-warning" onclick="moveStep(3)">Next <i class="fas fa-forward"></i></button>
+            </div>
+            </div>
+            </div>
+        </div>
+
+        <div class="container" id="step-3" >
+            <h2 class="text-center pb-4">Supports of the beam</h2>
+
+
+            <div class="row">
+                <div class="mx-auto d-block">
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <button type="button" class="btn btn-warning" onclick="moveStep(2)"><i class="fas fa-backward"></i> Previous</button>
+                        <button type="button" class="btn btn-warning">Visualize <i class="fas fa-drafting-compass"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+</div>
+</div>
+
+
+<!-- jQuery -->
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<!-- Bootstrap tooltips -->
+<script type="text/javascript" src="js/popper.min.js"></script>
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<!-- MDB core JavaScript -->
+<script type="text/javascript" src="js/mdb.min.js"></script>
+<!-- Your custom scripts (optional) -->
+<script type="text/javascript" src="js/main.js"></script>
+</body>
+</html>
