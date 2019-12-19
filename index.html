@@ -28,349 +28,409 @@
                 <a class="nav-link" href="#">
                     <i class="fas fa-info-circle"></i> About</a>
             </li>
-<!--            <li class="nav-item dropdown">-->
-<!--                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-4" data-toggle="dropdown"-->
-<!--                   aria-haspopup="true" aria-expanded="false">-->
-<!--                    <i class="fas fa-user"></i> Profile </a>-->
-<!--                <div class="dropdown-menu dropdown-menu-right dropdown-info" aria-labelledby="navbarDropdownMenuLink-4">-->
-<!--                    <a class="dropdown-item" href="#">My account</a>-->
-<!--                    <a class="dropdown-item" href="#">Log out</a>-->
-<!--                </div>-->
-<!--            </li>-->
+            <!--            <li class="nav-item dropdown">-->
+            <!--                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-4" data-toggle="dropdown"-->
+            <!--                   aria-haspopup="true" aria-expanded="false">-->
+            <!--                    <i class="fas fa-user"></i> Profile </a>-->
+            <!--                <div class="dropdown-menu dropdown-menu-right dropdown-info" aria-labelledby="navbarDropdownMenuLink-4">-->
+            <!--                    <a class="dropdown-item" href="#">My account</a>-->
+            <!--                    <a class="dropdown-item" href="#">Log out</a>-->
+            <!--                </div>-->
+            <!--            </li>-->
         </ul>
     </div>
 </nav>
 <!--/.Navbar -->
 
-<div class="row  mt-lg-5 d-block">
-    <div class="col-md-10 mx-auto d-block  mt-lg-5">
-<!-- Card -->
-<div class="card mx-auto d-block  mt-lg-5 ">
+<div class="row" id="readings">
+    <div class="col-md-10 mx-auto d-block ">
+        <!-- Card -->
+        <div class="card mx-auto d-block  mt-lg-5 ">
 
-    <!-- Card content -->
-    <div class="card-body">
+            <!-- Card content -->
+            <div class="card-body">
 
-        <!-- Title -->
-        <h1 class="card-title text-center  mt-4"><a>PPC Visualizer</a></h1>
-        <!-- Text -->
-        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <!-- Title -->
+                <h1 class="card-title text-center  mt-4"><a>PPC Visualizer</a></h1>
+                <!-- Text -->
+                <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk
+                    of the card's content.</p>
 
-        <!-- Horizontal Steppers -->
-        <ul class="stepper stepper-horizontal ml-5 mr-5 pb-0">
+                <!-- Horizontal Steppers -->
+                <ul class="stepper stepper-horizontal ml-5 mr-5 pb-0">
 
-            <!-- First Step -->
-            <li class="active" id="step-indicator-1">
-                <a href="#!">
-                    <span class="circle">1</span>
-                    <span class="label">Beam</span>
-                </a>
+                    <!-- First Step -->
+                    <li class="active" id="step-indicator-1">
+                        <a href="#!">
+                            <span class="circle">1</span>
+                            <span class="label">Beam</span>
+                        </a>
 
-            </li>
-
-            <!-- Second Step -->
-            <li id="step-indicator-2">
-                <a href="#!">
-                    <span class="circle">2</span>
-                    <span class="label">Geometry</span>
-                </a>
-            </li>
-
-            <!-- Third Step -->
-            <li id="step-indicator-3">
-                <a href="#!">
-                    <span class="circle">3</span>
-                    <span class="label">Loads</span>
-                </a>
-            </li>
-
-            <!-- Fourth Step -->
-            <li id="step-indicator-4">
-                <a href="#!">
-                    <span class="circle">4</span>
-                    <span class="label">Supports</span>
-                </a>
-            </li>
-
-            <!-- Fourth Step -->
-            <li id="step-indicator-5">
-                <a href="#!">
-                    <span class="circle">5</span>
-                    <span class="label">Cracks</span>
-                </a>
-            </li>
-
-        </ul>
-        <!-- /.Horizontal Steppers -->
-
-        <div class="container" id="step-1" >
-            <h2 class="text-center pb-1">Type of the Beam</h2>
-            <p class="text-center text-warning h5 pb-2">Please select your type of the beam</p>
-            <div class="row m-2">
-            <div class="mx-auto d-block">
-                <img src="img/i.png" class="btn btn-outline-warning p-4" id="type-i" onclick="selectType('i')">
-                <img src="img/t.png" class="btn btn-outline-warning p-4" id="type-t" onclick="selectType('t')">
-               <img src="img/r.png" class="btn btn-outline-warning p-4" id="type-r" onclick="selectType('r')">
-            </div>
-            </div>
-            <h2 align="center" class="p-2"><span class="badge badge-pill badge-warning" id="selected-type">Selected Beam Type : None</span></h2>
-        <button class="btn btn-warning rounded mx-auto d-block" onclick="firstStep()">Next <i class="fas fa-forward"></i></button>
-        </div>
-
-        <div class="container" id="step-2" >
-            <h2 class="text-center pb-4">Geometric Measurements of Beam</h2>
-
-            <div class="row p-2 " id="input-a">
-                <div class="col-3 text-right h3">a</div>
-                <div class="col-6">
-                    <input type="number" class="form-control" min="0" autofocus id="a">
-                </div>
-                <div class="col-3 text-left pt-2 pl-0">
-                    <label class='h5'>m</label>
-                    <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a>                </div>
-            </div>
-
-            <div class="row p-2" id="input-b">
-                <div class="col-3 text-right h3">b</div>
-                <div class="col-6">
-                    <input type="number" class="form-control" min="0" id="b">
-                </div>
-                <div class="col-3 text-left pt-2 pl-0">
-                    <label class='h5'>m</label>
-                    <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a>                </div>
-            </div>
-
-            <div class="row p-2" id="input-c">
-                <div class="col-3 text-right h3">c</div>
-                <div class="col-6">
-                    <input type="number" class="form-control" min="0" id="c">
-                </div>
-                <div class="col-3 text-left pt-2 pl-0">
-                    <label class='h5'>m</label>
-                    <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a>                </div>
-            </div>
-
-            <div class="row p-2" id="input-d">
-                <div class="col-3 text-right h3">d</div>
-                <div class="col-6">
-                    <input type="number" class="form-control" min="0" id="d">
-                </div>
-                <div class="col-3 text-left pt-2 pl-0">
-                    <label class='h5'>m</label>
-                    <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a>                </div>
-            </div>
-
-            <div class="row p-2" id="input-e">
-                <div class="col-3 text-right h3">e</div>
-                <div class="col-6">
-                    <input type="number" class="form-control" min="0" id="e">
-                </div>
-                <div class="col-3 text-left pt-2 pl-0">
-                    <label class='h5'>m</label>
-                    <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a>
-                </div>
-            </div>
-
-            <div class="row p-2" id="input-f">
-                <div class="col-3 text-right h3">f</div>
-                <div class="col-6">
-                    <input type="number" class="form-control" min="0" id="f">
-                </div>
-                <div class="col-3 text-left pt-2 pl-0">
-                    <label class='h5'>m</label>
-                    <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a>
-                </div>
-            </div>
-
-            <div class="row p-2" id="input-s">
-                <div class="col-3 text-right h3">Span length</div>
-                <div class="col-6">
-                    <input type="number" class="form-control" min="0" id="span">
-                </div>
-                <div class="col-3 text-left pt-2 pl-0">
-                    <label class='h5'>m</label>
-                    <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a>
-                </div>
-            </div>
-
-            <div class="row">
-            <div class="mx-auto d-block">
-            <div class="btn-group" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-warning" onclick="moveStep(1)"><i class="fas fa-backward"></i> Previous</button>
-                <button type="button" class="btn btn-warning" onclick="secondStep()">Next <i class="fas fa-forward"></i></button>
-            </div>
-            </div>
-            </div>
-        </div>
-
-        <div class="container" id="step-3" >
-            <h2 class="text-center pb-4">Loads of the beam</h2>
-
-            <div class="row mx-5 px-5">
-                <ul class="nav nav-tabs text-center w-100" id="load-type" role="tablist">
-                    <li class="nav-item w-50" onclick="changeLoadType('uniform')">
-                        <a class="nav-link active text-warning" id="uniform-tab" data-toggle="tab" href="#uniform" role="tab" aria-controls="home"
-                           aria-selected="true">Uniform Loads</a>
                     </li>
-                    <li class="nav-item w-50" onclick="changeLoadType('point')">
-                        <a class="nav-link text-warning" id="point-tab" data-toggle="tab" href="#point" role="tab" aria-controls="profile"
-                           aria-selected="false">Point Loads</a>
+
+                    <!-- Second Step -->
+                    <li id="step-indicator-2">
+                        <a href="#!">
+                            <span class="circle">2</span>
+                            <span class="label">Geometry</span>
+                        </a>
                     </li>
+
+                    <!-- Third Step -->
+                    <li id="step-indicator-3">
+                        <a href="#!">
+                            <span class="circle">3</span>
+                            <span class="label">Loads</span>
+                        </a>
+                    </li>
+
+                    <!-- Fourth Step -->
+                    <li id="step-indicator-4">
+                        <a href="#!">
+                            <span class="circle">4</span>
+                            <span class="label">Supports</span>
+                        </a>
+                    </li>
+
+                    <!-- Fourth Step -->
+                    <li id="step-indicator-5">
+                        <a href="#!">
+                            <span class="circle">5</span>
+                            <span class="label">Cracks</span>
+                        </a>
+                    </li>
+
                 </ul>
-                <div class="tab-content w-100" id="load-type-content">
-                    <div class="tab-pane fade show active" id="uniform" role="tabpanel" aria-labelledby="uniform-tab">
+                <!-- /.Horizontal Steppers -->
 
-                        <div class="row p-2 mt-3 mb-2">
-                            <div class="col-3 text-right h3">Load value</div>
-                            <div class="col-6">
-                                <input type="number" class="form-control" min="0" autofocus id="uni-load-value">
-                            </div>
-                            <div class="col-3 text-left pt-2 pl-0">
-                                <label class='h5'>kN/m</label>
-                                <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a>                </div>
+                <div class="container" id="step-1">
+                    <h2 class="text-center pb-1">Type of the Beam</h2>
+                    <p class="text-center text-warning h5 pb-2">Please select your type of the beam</p>
+                    <div class="row m-2">
+                        <div class="mx-auto d-block">
+                            <img src="img/i.png" class="btn btn-outline-warning p-4" id="type-i"
+                                 onclick="selectType('i')">
+                            <img src="img/t.png" class="btn btn-outline-warning p-4" id="type-t"
+                                 onclick="selectType('t')">
+                            <img src="img/r.png" class="btn btn-outline-warning p-4" id="type-r"
+                                 onclick="selectType('r')">
                         </div>
-
-
                     </div>
-                    <div class="tab-pane fade" id="point" role="tabpanel" aria-labelledby="point-tab">
+                    <h2 align="center" class="p-2"><span class="badge badge-pill badge-warning" id="selected-type">Selected Beam Type : None</span>
+                    </h2>
+                    <button class="btn btn-warning rounded mx-auto d-block" onclick="firstStep()">Next <i
+                            class="fas fa-forward"></i></button>
+                </div>
 
-                        <h5 align="center" class="mt-3">No. of loads</h5>
+                <div class="container" id="step-2">
+                    <h2 class="text-center pb-4">Geometric Measurements of Beam</h2>
+
+                    <div class="row p-2 " id="input-a">
+                        <div class="col-3 text-right h3">a</div>
+                        <div class="col-6">
+                            <input type="number" class="form-control" min="0" autofocus id="a">
+                        </div>
+                        <div class="col-3 text-left pt-2 pl-0">
+                            <label class='h5'>m</label>
+                            <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a></div>
+                    </div>
+
+                    <div class="row p-2" id="input-b">
+                        <div class="col-3 text-right h3">b</div>
+                        <div class="col-6">
+                            <input type="number" class="form-control" min="0" id="b">
+                        </div>
+                        <div class="col-3 text-left pt-2 pl-0">
+                            <label class='h5'>m</label>
+                            <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a></div>
+                    </div>
+
+                    <div class="row p-2" id="input-c">
+                        <div class="col-3 text-right h3">c</div>
+                        <div class="col-6">
+                            <input type="number" class="form-control" min="0" id="c">
+                        </div>
+                        <div class="col-3 text-left pt-2 pl-0">
+                            <label class='h5'>m</label>
+                            <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a></div>
+                    </div>
+
+                    <div class="row p-2" id="input-d">
+                        <div class="col-3 text-right h3">d</div>
+                        <div class="col-6">
+                            <input type="number" class="form-control" min="0" id="d">
+                        </div>
+                        <div class="col-3 text-left pt-2 pl-0">
+                            <label class='h5'>m</label>
+                            <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a></div>
+                    </div>
+
+                    <div class="row p-2" id="input-e">
+                        <div class="col-3 text-right h3">e</div>
+                        <div class="col-6">
+                            <input type="number" class="form-control" min="0" id="e">
+                        </div>
+                        <div class="col-3 text-left pt-2 pl-0">
+                            <label class='h5'>m</label>
+                            <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="row p-2" id="input-f">
+                        <div class="col-3 text-right h3">f</div>
+                        <div class="col-6">
+                            <input type="number" class="form-control" min="0" id="f">
+                        </div>
+                        <div class="col-3 text-left pt-2 pl-0">
+                            <label class='h5'>m</label>
+                            <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="row p-2" id="input-s">
+                        <div class="col-3 text-right h3">Span length</div>
+                        <div class="col-6">
+                            <input type="number" class="form-control" min="0" id="span">
+                        </div>
+                        <div class="col-3 text-left pt-2 pl-0">
+                            <label class='h5'>m</label>
+                            <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="mx-auto d-block">
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <button type="button" class="btn btn-warning" onclick="moveStep(1)"><i
+                                        class="fas fa-backward"></i> Previous
+                                </button>
+                                <button type="button" class="btn btn-warning" onclick="secondStep()">Next <i
+                                        class="fas fa-forward"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container" id="step-3">
+                    <h2 class="text-center pb-4">Loads of the beam</h2>
+
+                    <div class="row mx-5 px-5">
+                        <ul class="nav nav-tabs text-center w-100" id="load-type" role="tablist">
+                            <li class="nav-item w-50" onclick="changeLoadType('uniform')">
+                                <a class="nav-link active text-warning" id="uniform-tab" data-toggle="tab"
+                                   href="#uniform" role="tab" aria-controls="home"
+                                   aria-selected="true">Uniform Loads</a>
+                            </li>
+                            <li class="nav-item w-50" onclick="changeLoadType('point')">
+                                <a class="nav-link text-warning" id="point-tab" data-toggle="tab" href="#point"
+                                   role="tab" aria-controls="profile"
+                                   aria-selected="false">Point Loads</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content w-100" id="load-type-content">
+                            <div class="tab-pane fade show active" id="uniform" role="tabpanel"
+                                 aria-labelledby="uniform-tab">
+
+                                <div class="row p-2 mt-3 mb-2">
+                                    <div class="col-3 text-right h3">Load value</div>
+                                    <div class="col-6">
+                                        <input type="number" class="form-control" min="0" autofocus id="uni-load-value">
+                                    </div>
+                                    <div class="col-3 text-left pt-2 pl-0">
+                                        <label class='h5'>kN/m</label>
+                                        <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="tab-pane fade" id="point" role="tabpanel" aria-labelledby="point-tab">
+
+                                <h5 align="center" class="mt-3">No. of loads</h5>
+                                <div class="row p-2">
+                                    <div class="col-4 text-right h3"></div>
+                                    <div class="col-4">
+                                        <input type="number" class="form-control text-center" min="1" autofocus
+                                               id="point-load-count" value="1" onkeyup="addPointLoadInputField()"
+                                               onchange="addPointLoadInputField()">
+                                    </div>
+                                    <div class="col-4 text-left pt-2 pl-0"></div>
+                                </div>
+
+                                <div class="row p-2 mt-2">
+                                    <div class="col-3"></div>
+                                    <div class="col-3 text-center h5">
+                                        Location(m)
+                                    </div>
+                                    <div class="col-3 text-center h5">
+                                        Load value(kN)
+                                    </div>
+                                    <div class="col-3"></div>
+                                </div>
+
+                                <div id="point-load-inputs">
+                                    <div class="row p-2">
+                                        <div class="col-3"></div>
+                                        <div class="col-3">
+                                            <input type="number" class="form-control point-location" min="0">
+                                        </div>
+                                        <div class="col-3">
+                                            <input type="number" class="form-control point-load" min="0">
+                                        </div>
+                                        <div class="col-3 text-left pt-2 pl-0">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="mx-auto d-block">
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <button type="button" class="btn btn-warning" onclick="moveStep(2)"><i
+                                        class="fas fa-backward"></i> Previous
+                                </button>
+                                <button type="button" class="btn btn-warning" onclick="thirdStep()">Next <i
+                                        class="fas fa-forward"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container" id="step-4">
+                    <h2 class="text-center pb-4">Supports of the beam</h2>
+
+
+                    <h5 align="center" class="mt-3">No. of Supports</h5>
+                    <div class="row p-2">
+                        <div class="col-4 text-right h3"></div>
+                        <div class="col-4">
+                            <input type="number" class="form-control text-center" min="1" autofocus id="supports-count"
+                                   value="1" onkeyup="addSupports()" onchange="addSupports()">
+                        </div>
+                        <div class="col-4 text-left pt-2 pl-0"></div>
+                    </div>
+
+                    <div class="row p-2 mt-2">
+                        <div class="col-4"></div>
+                        <div class="col-4 text-center h5">
+                            Location(m)
+                        </div>
+                        <div class="col-4"></div>
+                    </div>
+
+                    <div id="supports-inputs">
                         <div class="row p-2">
-                            <div class="col-4 text-right h3"></div>
+                            <div class="col-4"></div>
                             <div class="col-4">
-                                <input type="number" class="form-control text-center" min="1" autofocus id="point-load-count" value="1" onkeyup="addPointLoadInputField()" onchange="addPointLoadInputField()">
+                                <input type="number" class="form-control support-location" min="0">
                             </div>
-                            <div class="col-4 text-left pt-2 pl-0"></div>
-                        </div>
-
-                        <div class="row p-2 mt-2">
-                            <div class="col-3"></div>
-                            <div class="col-3 text-center h5">
-                                Location(m)
+                            <div class="col-4 text-left pt-2 pl-0">
                             </div>
-                            <div class="col-3 text-center h5">
-                                Load value(kN)
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="mx-auto d-block">
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <button type="button" class="btn btn-warning" onclick="moveStep(3)"><i
+                                        class="fas fa-backward"></i> Previous
+                                </button>
+                                <button type="button" class="btn btn-warning" onclick="fourthStep()">Next <i
+                                        class="fas fa-forward"></i></button>
                             </div>
-                            <div class="col-3"></div>
                         </div>
+                    </div>
+                </div>
 
-                        <div id="point-load-inputs">
-                                                    <div class="row p-2">
-                                                        <div class="col-3"></div>
-                                                        <div class="col-3">
-                                                            <input type="number" class="form-control point-location" min="0" >
-                                                        </div>
-                                                        <div class="col-3">
-                                                            <input type="number" class="form-control point-load" min="0" >
-                                                        </div>
-                                                        <div class="col-3 text-left pt-2 pl-0">
-                                                        </div>
-                                                    </div>
+                <div class="container" id="step-5">
+
+                    <h2 class="text-center pb-4">Cracks in beam</h2>
+
+                    <div class="row p-2 ">
+                        <div class="col-3 text-right h3">Spacing</div>
+                        <div class="col-6">
+                            <input type="number" class="form-control" min="0" autofocus id="crack-spacing">
                         </div>
+                        <div class="col-3 text-left pt-2 pl-0">
+                            <label class='h5'>m</label>
+                            <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a></div>
+                    </div>
 
+                    <div class="row p-2 ">
+                        <div class="col-3 text-right h3">Width</div>
+                        <div class="col-6">
+                            <input type="number" class="form-control" min="0" autofocus id="crack-width">
+                        </div>
+                        <div class="col-3 text-left pt-2 pl-0">
+                            <label class='h5'>m</label>
+                            <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a></div>
+                    </div>
+
+                    <div class="row p-2 ">
+                        <div class="col-3 text-right h3">Depth</div>
+                        <div class="col-6">
+                            <input type="number" class="form-control" min="0" autofocus id="crack-depth">
+                        </div>
+                        <div class="col-3 text-left pt-2 pl-0">
+                            <label class='h5'>m</label>
+                            <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a></div>
+                    </div>
+
+                    <div class="row">
+                        <div class="mx-auto d-block">
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <button type="button" class="btn btn-warning" onclick="moveStep(4)"><i
+                                        class="fas fa-backward"></i> Previous
+                                </button>
+                                <button type="button" class="btn btn-warning" onclick="visualize()">Visualize <i
+                                        class="fas fa-drafting-compass"></i></button>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
+
             </div>
+        </div>
+    </div>
+</div>
 
-            <div class="row">
-                <div class="mx-auto d-block">
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-warning" onclick="moveStep(2)"><i class="fas fa-backward"></i> Previous</button>
-                        <button type="button" class="btn btn-warning" onclick="thirdStep()">Next <i class="fas fa-forward"></i></button>
-                    </div>
-                </div>
+<div id="display" class="mx-auto">
+    <!-- Title -->
+    <h1 class="card-title text-center"><a>PPC Visualizer</a></h1>
+    <!-- Text -->
+    <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk
+        of the card's content.</p>
+
+    <div class="row mesh-background m-3 p-1">
+        <div class="col-md-2 p-0">
+            <div id="cross-section" style="width: 250px;height: 300px;">
+                <p class="text-center" id="cross-section-title">Cross Sectional View</p>
+
             </div>
         </div>
 
-        <div class="container" id="step-4">
-            <h2 class="text-center pb-4">Supports of the beam</h2>
-
-
-            <h5 align="center" class="mt-3">No. of Supports</h5>
-            <div class="row p-2">
-                <div class="col-4 text-right h3"></div>
-                <div class="col-4">
-                    <input type="number" class="form-control text-center" min="1" autofocus id="supports-count" value="1" onkeyup="addSupports()" onchange="addSupports()">
-                </div>
-                <div class="col-4 text-left pt-2 pl-0"></div>
-            </div>
-
-            <div class="row p-2 mt-2">
-                <div class="col-4"></div>
-                <div class="col-4 text-center h5">
-                    Location(m)
-                </div>
-                <div class="col-4"></div>
-            </div>
-
-            <div id="supports-inputs">
-                <div class="row p-2">
-                    <div class="col-4"></div>
-                    <div class="col-4">
-                        <input type="number" class="form-control support-location" min="0" >
-                    </div>
-                    <div class="col-4 text-left pt-2 pl-0">
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="mx-auto d-block">
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-warning" onclick="moveStep(3)"><i class="fas fa-backward"></i> Previous</button>
-                        <button type="button" class="btn btn-warning" onclick="fourthStep()">Next <i class="fas fa-forward"></i></button>
-                    </div>
-                </div>
+        <div class="col-md-10 p-0">
+            <div id="longitudinal-section" style="width: 1100px;height: 300px;">
+                <p class="text-center" id="longitudinal-section-title">Longitudinal Sectional View</p>
             </div>
         </div>
-
-        <div class="container" id="step-5">
-
-            <h2 class="text-center pb-4">Cracks in beam</h2>
-
-            <div class="row p-2 ">
-                <div class="col-3 text-right h3">Spacing</div>
-                <div class="col-6">
-                    <input type="number" class="form-control" min="0" autofocus id="crack-spacing">
-                </div>
-                <div class="col-3 text-left pt-2 pl-0">
-                    <label class='h5'>m</label>
-                    <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a>                </div>
-            </div>
-
-            <div class="row p-2 ">
-                <div class="col-3 text-right h3">Width</div>
-                <div class="col-6">
-                    <input type="number" class="form-control" min="0" autofocus id="crack-width">
-                </div>
-                <div class="col-3 text-left pt-2 pl-0">
-                    <label class='h5'>m</label>
-                    <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a>                </div>
-            </div>
-
-            <div class="row p-2 ">
-                <div class="col-3 text-right h3">Depth</div>
-                <div class="col-6">
-                    <input type="number" class="form-control" min="0" autofocus id="crack-depth">
-                </div>
-                <div class="col-3 text-left pt-2 pl-0">
-                    <label class='h5'>m</label>
-                    <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a>                </div>
-            </div>
-
-            <div class="row">
-                <div class="mx-auto d-block">
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-warning" onclick="moveStep(4)"><i class="fas fa-backward"></i> Previous</button>
-                        <button type="button" class="btn btn-warning" onclick="visualize()">Visualize <i class="fas fa-drafting-compass"></i></button>
-                    </div>
-                </div>
-            </div>
-
     </div>
 
-</div>
-</div>
+    <div class="row">
+        <div class="mx-auto d-block">
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-warning" onclick="goBack()"><i class="fas fa-backward"></i>&nbsp;&nbsp;&nbsp;Go
+                    Back
+                </button>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 

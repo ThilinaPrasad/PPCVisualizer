@@ -37,7 +37,10 @@ let beamData = {
         "spacing": 0,
         "width": 0,
         "depth": 0
-    }
+    },
+    "scale_cross":1,
+    "scale_span":1
+
 };
 
 function selectType(type) {
@@ -140,32 +143,31 @@ function fourthStep() {
 }
 
 function buildDataObject(){
+
+    let cross_scale_val = scale();
+
     beamData["beamType"] = selectedType;
 
-    beamData["geometricData"]['a'] = parseFloat(a);
-    beamData["geometricData"]['b'] = parseFloat(b);
-    beamData["geometricData"]['c'] = parseFloat(c);
-    beamData["geometricData"]['d'] = parseFloat(d);
-    beamData["geometricData"]['e'] = parseFloat(e);
-    beamData["geometricData"]['f'] = parseFloat(f);
-    beamData["geometricData"]['span'] = parseFloat(span);
+    beamData['scale_cross'] = cross_scale_val;
+    beamData['scale_span'] = 1000/parseFloat(span);
+
+    beamData["geometricData"]['a'] = parseFloat(a)*cross_scale_val;
+    beamData["geometricData"]['b'] = parseFloat(b)*cross_scale_val;
+    beamData["geometricData"]['c'] = parseFloat(c)*cross_scale_val;
+    beamData["geometricData"]['d'] = parseFloat(d)*cross_scale_val;
+    beamData["geometricData"]['e'] = parseFloat(e)*cross_scale_val;
+    beamData["geometricData"]['f'] = parseFloat(f)*cross_scale_val;
+    beamData["geometricData"]['span'] = parseFloat(span)*beamData['scale_span'];
 
     beamData["loads"]['type'] = loadType;
     beamData["loads"]['data'] = loadValues;
 
     beamData["supportLocations"] = supportsLocations;
 
-    beamData["cracks"]["spacing"] = parseInt($("#crack-spacing").val())
-    beamData["cracks"]["width"] = parseInt($("#crack-width").val())
-    beamData["cracks"]["depth"] = parseInt($("#crack-depth").val())
+    beamData["cracks"]["spacing"] = parseInt($("#crack-spacing").val());
+    beamData["cracks"]["width"] = parseInt($("#crack-width").val());
+    beamData["cracks"]["depth"] = parseInt($("#crack-depth").val());
 
-}
-
-function visualize() {
-    this.buildDataObject();
-
-    alert(JSON.stringify(beamData));
-    console.log(beamData);
 }
 
 function moveStep(step){
@@ -224,3 +226,196 @@ function addSupports() {
     }
     $('#supports-inputs').html(content);
 }
+
+function visualize() {
+    this.buildDataObject();
+
+    $('#readings').hide();
+    $('#display').show();
+
+
+    drawCrossSection(beamData);
+    console.log(beamData);
+}
+
+function goBack() {
+    moveStep(1);
+    $("#cross-section").children('svg').remove();
+    $("#longitudinal-section").children('svg').remove();
+    $('#readings').show();
+    $('#display').hide();
+}
+
+
+function createSVG(container_id,width, height){
+    let svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+    svg.setAttribute('version', '1.1');
+    const canvas = document.getElementById(container_id);
+    canvas.style.minWidth = width;
+    canvas.style.minHeight = height;
+    svg.setAttribute('height', height);
+    svg.setAttribute('width', width);
+    svg.style.display = 'block';
+    svg.style.margin = 'auto';
+    let marginVal = (300 - height)/2;
+    document.getElementById(container_id+'-title').style.marginTop = marginVal.toString()+'px'
+    canvas.appendChild(svg);
+    return svg;
+}
+
+function crossSectionalView(points) {
+    const poly = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+    poly.setAttribute("points", points);
+    // poly.setAttribute("stroke", 'black');
+    poly.setAttribute('fill', '#ffc107');
+    poly.setAttribute('stroke-width', '2');
+    return poly;
+}
+
+function initialPoints(dataJson) {
+    let dimensions = dataJson['geometricData'];
+    let scale = dataJson['scale'];
+    let points = [0,0];
+    if(dimensions['a']<dimensions['f']){
+        let diff = dimensions['f'] - dimensions['a']
+        points[0] = diff/2;
+    }
+    return points;
+}
+
+function drawCrossSection(dataJson) {
+    let type = dataJson['beamType'];
+    let dimensions = dataJson['geometricData'];
+    let initials = initialPoints(dataJson);
+    let height;
+    let width;
+
+
+    // A
+    let x = [initials[0]];
+    let y = [initials[1]];
+
+    if(type === 'r'){
+        //B
+        x.push(x[0]+dimensions['a']);
+        y.push(y[0]);
+
+        //C
+        x.push(x[0]+dimensions['a']);
+        y.push(y[0]+dimensions['b']);
+
+        //D
+        x.push(x[0]);
+        y.push(y[0]+dimensions['b']);
+
+        height = dimensions['b'];
+        width = dimensions['a'];
+
+    }else if(type === 't'){
+        //B
+        x.push(x[0]+dimensions['a']);
+        y.push(y[0]);
+
+        //C
+        x.push(x[0]+dimensions['a']);
+        y.push(y[0]+dimensions['b']);
+
+        //D
+        x.push(x[0]+((dimensions['a']+dimensions['d'])/2));
+        y.push(y[0]+dimensions['b']);
+
+        //E
+        x.push(x[0]+((dimensions['a']+dimensions['d'])/2));
+        y.push(y[0]+dimensions['b']+dimensions['c']);
+
+        //J
+        x.push(x[0]+((dimensions['a']-dimensions['d'])/2));
+        y.push(y[0]+dimensions['b']+dimensions['c']);
+
+        //K
+        x.push(x[0]+((dimensions['a']-dimensions['d'])/2));
+        y.push(y[0]+dimensions['b']);
+
+        //L
+        x.push(x[0]);
+        y.push(y[0]+dimensions['b']);
+
+        height = dimensions['b']+dimensions['c'];
+        width = dimensions['a'];
+
+    }else if(type === 'i'){
+        //B
+        x.push(x[0]+dimensions['a']);
+        y.push(y[0]);
+
+        //C
+        x.push(x[0]+dimensions['a']);
+        y.push(y[0]+dimensions['b']);
+
+        //D
+        x.push(x[0]+((dimensions['a']+dimensions['d'])/2));
+        y.push(y[0]+dimensions['b']);
+
+        //E
+        x.push(x[0]+((dimensions['a']+dimensions['d'])/2));
+        y.push(y[0]+dimensions['b']+dimensions['c']);
+
+        //F
+        x.push(x[0]+((dimensions['a']+dimensions['f'])/2));
+        y.push(y[0]+dimensions['b']+dimensions['c']);
+
+        //G
+        x.push(x[0]+((dimensions['a']+dimensions['f'])/2));
+        y.push(y[0]+dimensions['b']+dimensions['c']+dimensions['e']);
+
+        //H
+        x.push(x[0]+((dimensions['a']-dimensions['f'])/2));
+        y.push(y[0]+dimensions['b']+dimensions['c']+dimensions['e']);
+
+        //I
+        x.push(x[0]+((dimensions['a']-dimensions['f'])/2));
+        y.push(y[0]+dimensions['b']+dimensions['c']);
+
+        //J
+        x.push(x[0]+((dimensions['a']-dimensions['d'])/2));
+        y.push(y[0]+dimensions['b']+dimensions['c']);
+
+        //K
+        x.push(x[0]+((dimensions['a']-dimensions['d'])/2));
+        y.push(y[0]+dimensions['b']);
+
+        //L
+        x.push(x[0]);
+        y.push(y[0]+dimensions['b']);
+
+        height = dimensions['b']+dimensions['c']+dimensions['e'];
+        width = dimensions['a']>dimensions['f']? dimensions['a'] : dimensions['f'];
+    }
+    let points = "";
+    for(let i=0; i<x.length; i++){
+        points += x[i].toString() + ',' + y[i].toString() + ' ';
+    }
+
+    let svg = createSVG('cross-section',width,height);
+    svg.appendChild(crossSectionalView(points));
+}
+
+function scale(){
+    let type = selectedType;
+    let width = 0;
+    let height = 0;
+    if(type === 'r'){
+        height = parseFloat(b);
+        width = parseFloat(a);
+    }else if(type === 't'){
+        height = parseFloat(b)+parseFloat(c);
+        width = parseFloat(a);
+    }else if(type === 'i'){
+        height = parseFloat(b)+parseFloat(c)+parseFloat(e);
+        width = parseFloat(a)>parseFloat(f)? parseFloat(a) : parseFloat(f);
+    }
+    return Math.min(200/width, 200/height);
+
+}
+

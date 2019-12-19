@@ -32,3 +32,17 @@
     overflow-y: scroll;
 }
 
+#display{
+    display: none;
+    height: auto;
+    position: relative;
+    top: 70px;
+}
+
+#readings{
+    /*display: none;*/
+}
+.mesh-background{
+    background: #ffff url("../img/background.png") repeat right top;
+    min-height: 350px!important;
+}
