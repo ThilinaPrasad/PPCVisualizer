@@ -149,7 +149,7 @@ function buildDataObject(){
     beamData["beamType"] = selectedType;
 
     beamData['scale_cross'] = cross_scale_val;
-    beamData['scale_span'] = 1000/parseFloat(span);
+    beamData['scale_span'] = (cross_scale_val*parseFloat(span))>1000 ? 1000/parseFloat(span): cross_scale_val;
 
     beamData["geometricData"]['a'] = parseFloat(a)*cross_scale_val;
     beamData["geometricData"]['b'] = parseFloat(b)*cross_scale_val;
@@ -227,6 +227,24 @@ function addSupports() {
     $('#supports-inputs').html(content);
 }
 
+function scale(){
+    let type = selectedType;
+    let width = 0;
+    let height = 0;
+    if(type === 'r'){
+        height = parseFloat(b);
+        width = parseFloat(a);
+    }else if(type === 't'){
+        height = parseFloat(b)+parseFloat(c);
+        width = parseFloat(a);
+    }else if(type === 'i'){
+        height = parseFloat(b)+parseFloat(c)+parseFloat(e);
+        width = parseFloat(a)>parseFloat(f)? parseFloat(a) : parseFloat(f);
+    }
+    return Math.min(200/width, 200/height);
+
+}
+
 function visualize() {
     this.buildDataObject();
 
@@ -235,6 +253,7 @@ function visualize() {
 
 
     drawCrossSection(beamData);
+    drawLongitudinalSection(beamData);
     console.log(beamData);
 }
 
@@ -246,11 +265,13 @@ function goBack() {
     $('#display').hide();
 }
 
-
 function createSVG(container_id,width, height){
     let svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
     svg.setAttribute('version', '1.1');
+    // svg.innerHTML = ('<pattern id="concrete" height="100%" width="100%" patternContentUnits="objectBoundingBox">\n' +
+    //     '                        <image height="1" width="1" preserveAspectRatio="none" xlink:href="img/beam_fill.jpg" />\n' +
+    //     '                    </pattern>');
     const canvas = document.getElementById(container_id);
     canvas.style.minWidth = width;
     canvas.style.minHeight = height;
@@ -264,21 +285,20 @@ function createSVG(container_id,width, height){
     return svg;
 }
 
-function crossSectionalView(points) {
+function drawPolygon(points, fill = "gray", stroke = 'none') {
     const poly = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
     poly.setAttribute("points", points);
-    // poly.setAttribute("stroke", 'black');
-    poly.setAttribute('fill', '#ffc107');
+    poly.setAttribute("stroke", stroke);
+    poly.setAttribute('fill', fill);
     poly.setAttribute('stroke-width', '2');
     return poly;
 }
 
 function initialPoints(dataJson) {
     let dimensions = dataJson['geometricData'];
-    let scale = dataJson['scale'];
     let points = [0,0];
     if(dimensions['a']<dimensions['f']){
-        let diff = dimensions['f'] - dimensions['a']
+        let diff = dimensions['f'] - dimensions['a'];
         points[0] = diff/2;
     }
     return points;
@@ -398,24 +418,70 @@ function drawCrossSection(dataJson) {
     }
 
     let svg = createSVG('cross-section',width,height);
-    svg.appendChild(crossSectionalView(points));
+    svg.appendChild(drawPolygon(points));
 }
 
-function scale(){
-    let type = selectedType;
-    let width = 0;
-    let height = 0;
-    if(type === 'r'){
-        height = parseFloat(b);
-        width = parseFloat(a);
-    }else if(type === 't'){
-        height = parseFloat(b)+parseFloat(c);
-        width = parseFloat(a);
-    }else if(type === 'i'){
-        height = parseFloat(b)+parseFloat(c)+parseFloat(e);
-        width = parseFloat(a)>parseFloat(f)? parseFloat(a) : parseFloat(f);
+function drawLongitudinalSection(dataJson){
+    let type = dataJson['beamType'];
+    let initials = initialPoints(dataJson);
+    let dimensions = dataJson['geometricData'];
+    let height;
+    let width = dimensions['span'];
+    // A(Initial point)
+    let x = [initials[0]];
+    let y = [initials[1]];
+
+    if(type === 'r') {
+
+        //B
+        x.push(x[0] + dimensions['span']);
+        y.push(y[0]);
+
+        //C
+        x.push(x[0] + dimensions['span']);
+        y.push(y[0] + dimensions['b']);
+
+        //D
+        x.push(x[0]);
+        y.push(y[0] + dimensions['b']);
+
+        height = dimensions['b'];
+    }else if(type === 't') {
+
+        //B
+        x.push(x[0] + dimensions['span']);
+        y.push(y[0]);
+
+        //C
+        x.push(x[0] + dimensions['span']);
+        y.push(y[0] + dimensions['b'] + dimensions['c']);
+
+        //D
+        x.push(x[0]);
+        y.push(y[0] + dimensions['b'] + dimensions['c']);
+        height = dimensions['b'] + dimensions['c'];
+    }else {
+
+        //B
+        x.push(x[0] + dimensions['span']);
+        y.push(y[0]);
+
+        //C
+        x.push(x[0] + dimensions['span']);
+        y.push(y[0] + dimensions['b'] + dimensions['c'] + dimensions['e']);
+
+        //D
+        x.push(x[0]);
+        y.push(y[0] + dimensions['b'] + dimensions['c'] + dimensions['e']);
+        height = dimensions['b'] + dimensions['c'] + dimensions['e'];
     }
-    return Math.min(200/width, 200/height);
+
+    let points = "";
+    for(let i=0; i<x.length; i++){
+        points += x[i].toString() + ',' + y[i].toString() + ' ';
+    }
+    let svg = createSVG('longitudinal-section',width,height);
+    svg.appendChild(drawPolygon(points));
 
 }
 
