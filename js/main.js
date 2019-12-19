@@ -142,6 +142,24 @@ function fourthStep() {
     moveStep(5);
 }
 
+function scaling(input, scale) {
+    let temp = [];
+    input.forEach(function (item) {
+        item = item * scale;
+        temp.push(item);
+    });
+    return temp;
+}
+
+function scalingPointLoads(input, scale) {
+    let temp = [];
+    input.forEach(function (item) {
+        item[0] = item[0] * scale;
+        temp.push(item);
+    });
+    return temp;
+}
+
 function buildDataObject(){
 
     let cross_scale_val = scale();
@@ -160,10 +178,9 @@ function buildDataObject(){
     beamData["geometricData"]['span'] = parseFloat(span)*beamData['scale_span'];
 
     beamData["loads"]['type'] = loadType;
-    beamData["loads"]['data'] = loadValues;
+    beamData["loads"]['data'] = scalingPointLoads(loadValues, beamData['scale_span']);
 
-    beamData["supportLocations"] = supportsLocations;
-
+    beamData["supportLocations"] = scaling(supportsLocations, beamData['scale_span']);
     beamData["cracks"]["spacing"] = parseInt($("#crack-spacing").val());
     beamData["cracks"]["width"] = parseInt($("#crack-width").val());
     beamData["cracks"]["depth"] = parseInt($("#crack-depth").val());
@@ -294,13 +311,15 @@ function drawPolygon(points, fill = "gray", stroke = 'none') {
     return poly;
 }
 
-function initialPoints(dataJson) {
+function initialPoints(dataJson, x_shift = 0, y_shift = 0) {
     let dimensions = dataJson['geometricData'];
     let points = [0,0];
     if(dimensions['a']<dimensions['f']){
         let diff = dimensions['f'] - dimensions['a'];
         points[0] = diff/2;
     }
+    points[0] += x_shift;
+    points[1] += y_shift;
     return points;
 }
 
@@ -423,7 +442,7 @@ function drawCrossSection(dataJson) {
 
 function drawLongitudinalSection(dataJson){
     let type = dataJson['beamType'];
-    let initials = initialPoints(dataJson);
+    let initials = initialPoints(dataJson,20, 50);
     let dimensions = dataJson['geometricData'];
     let height;
     let width = dimensions['span'];
@@ -480,8 +499,129 @@ function drawLongitudinalSection(dataJson){
     for(let i=0; i<x.length; i++){
         points += x[i].toString() + ',' + y[i].toString() + ' ';
     }
-    let svg = createSVG('longitudinal-section',width,height);
+    let svg = createSVG('longitudinal-section',width+80,height+100);
     svg.appendChild(drawPolygon(points));
+    drawSupports(dataJson,svg);
+    if(dataJson['loads']['type'] === "uniform"){
+        drawUniformLoads(dataJson, svg);
+    }else if(dataJson['loads']['type'] === "point"){
+        drawPointLoads(dataJson, svg);
+    }
+}
+
+//Draw Supports
+function drawSupports(dataJson,svg) {
+    let dimensions = dataJson['geometricData'];
+    let supportLocations = dataJson['supportLocations'];
+    let initials = initialPoints(dataJson, 20, 50);
+    let y = dimensions['b']+initials[1];
+    for(let i=0; i<supportLocations.length; i++){
+        let x = initials[0] + supportLocations[i];
+        svg.appendChild(generateSupportCoordinates(x,y));
+    }
 
 }
 
+
+function generateSupportCoordinates(initial_x,initial_y) {
+
+    x = [initial_x];
+    y = [initial_y];
+    x.push(initial_x+15);
+    y.push(initial_y+35);
+    x.push(initial_x-15);
+    y.push(initial_y+35);
+    let supports = "";
+    for(let i=0; i<x.length; i++){
+        supports += x[i].toString() + ',' + y[i].toString() + ' ';
+    }
+    return drawPolygon(supports, "blue");
+}
+
+//Draw Point Loads
+function drawPointLoads(dataJson, svg) {
+    let pointDimensions = dataJson['loads']['data'];
+    let initials = initialPoints(dataJson, 20, 50);
+    let y = initials[1];
+    for(let i=0; i<pointDimensions.length; i++){
+        let x = initials[0] + pointDimensions[i][0];
+        svg.appendChild(generatePointLoadCoordinates(x,y));
+    }
+}
+
+function generatePointLoadCoordinates(initial_x,initial_y) {
+
+    x = [initial_x];
+    y = [initial_y];
+    x.push(initial_x+10);
+    y.push(initial_y-15);
+    x.push(initial_x+5);
+    y.push(initial_y-15);
+    x.push(initial_x+5);
+    y.push(initial_y-50);
+    x.push(initial_x-5);
+    y.push(initial_y-50);
+    x.push(initial_x-5)
+    y.push(initial_y-15);
+    x.push(initial_x-10);
+    y.push(initial_y-15);
+    let supports = "";
+    for(let i=0; i<x.length; i++){
+        supports += x[i].toString() + ',' + y[i].toString() + ' ';
+    }
+    return drawPolygon(supports,"blue");
+}
+
+//Draw Uniform Loads
+function drawUniformLoads(dataJson, svg) {
+    let dimensions = dataJson['geometricData'];
+    let span = dimensions['span'];
+    let arrow_count = 20;
+    let divider = span/arrow_count;
+    let initials = initialPoints(dataJson, 20, 50);
+    let y = initials[1];
+    for(let i=0; i<=arrow_count; i++){
+        let x = initials[0];
+        x += divider*i;
+        svg.appendChild(generateUniformLoadCoordinates(x,y));
+    }
+    //draw horizontal line
+    x = [initials[0]-3];
+    y = [initials[1]-25]; //100 - 40
+    x.push(initials[0]-3);
+    y.push(initials[1]-30);
+    x.push(initials[0]+3+span);
+    y.push(initials[1]-30);
+    x.push(initials[0]+3+span);
+    y.push(initials[1]-25);
+
+    let supports = "";
+
+    for(let i=0; i<x.length; i++){
+        supports += x[i].toString() + ',' + y[i].toString() + ' ';
+    }
+    svg.appendChild(drawPolygon(supports,"blue"));
+}
+
+function generateUniformLoadCoordinates(initial_x,initial_y) {
+
+    x = [initial_x];
+    y = [initial_y];
+    x.push(initial_x+5);
+    y.push(initial_y-10);
+    x.push(initial_x+2);
+    y.push(initial_y-10);
+    x.push(initial_x+2);
+    y.push(initial_y-25);
+    x.push(initial_x-2);
+    y.push(initial_y-25);
+    x.push(initial_x-2);
+    y.push(initial_y-10);
+    x.push(initial_x-5);
+    y.push(initial_y-10);
+    let supports = "";
+    for(let i=0; i<x.length; i++){
+        supports += x[i].toString() + ',' + y[i].toString() + ' ';
+    }
+    return drawPolygon(supports,"blue");
+}
