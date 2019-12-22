@@ -42,7 +42,22 @@
 #readings{
     /*display: none;*/
 }
+
 .mesh-background{
     background: #ffff url("../img/background.png") repeat right top;
     min-height: 350px!important;
+}
+
+.beam-type{
+    width: 200px;
+    height: 200px;
+}
+
+.animation{
+    transition: width 0.5s ease-in;
+}
+
+.beam-type-selected{
+    width: auto;
+    height: auto;
 }

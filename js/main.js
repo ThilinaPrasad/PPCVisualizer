@@ -17,8 +17,11 @@ let loadValues;
 // 4th step
 let supportsLocations;
 
+// 5th step
+let crackZones;
+
 let beamData = {
-    "beamType" : null,
+    "beamType": null,
     "geometricData": {
         'a': 0,
         'b': 0,
@@ -33,52 +36,63 @@ let beamData = {
         "data": [],
     },
     "supportLocations": [],
-    "cracks":{
+    "crackZones": [{
+        "name": null,
+        "start": 0,
+        "end": 0,
         "spacing": 0,
         "width": 0,
         "depth": 0
-    },
-    "scale_cross":1,
-    "scale_span":1
+    }],
+    "scale_cross": 1,
+    "scale_span": 1
 
 };
 
 function selectType(type) {
-        selectedType = type;
-        $('#type-i').removeClass("btn-warning");
-        $('#type-i').addClass("btn-outline-warning");
-        $('#type-t').removeClass("btn-warning");
-        $('#type-t').addClass("btn-outline-warning");
-        $('#type-r').removeClass("btn-warning");
-        $('#type-r').addClass("btn-outline-warning");
+    selectedType = type;
+    $('#type-i').removeClass("btn-warning");
+    $('#type-i').addClass("beam-type");
+    $('#type-i').removeClass("beam-type-selected");
+    $('#type-i').addClass("btn-outline-warning");
+    $('#type-t').removeClass("btn-warning");
+    $('#type-t').removeClass("beam-type-selected");
+    $('#type-t').addClass("beam-type");
+    $('#type-t').addClass("btn-outline-warning");
+    $('#type-r').removeClass("btn-warning");
+    $('#type-r').removeClass("beam-type-selected");
+    $('#type-r').addClass("beam-type");
+    $('#type-r').addClass("btn-outline-warning");
 
-        $('#type-'+type).removeClass("btn-outline-warning");
-        $('#type-'+type).addClass("btn-warning");
+    $('#type-' + type).removeClass("btn-outline-warning");
+    $('#type-' + type).addClass("btn-warning");
+    $('#type-' + type).addClass("beam-type-selected");
 
-        beamTypes = {'i': 'I', 't': "T", 'r': 'Rectangular'}
 
-        $('#selected-type').text('Selected Beam Type : '+beamTypes[type]+' Beam');
+    beamTypes = {'i': 'I', 't': "T", 'r': 'Rectangular'}
+
+    $('#selected-type').text('Selected Beam Type : ' + beamTypes[type] + ' Beam');
 }
 
-function firstStep(){
-    if(selectedType == null){
+function firstStep() {
+    if (selectedType == null) {
         return
     }
-    if(selectedType === 't'){
+    if (selectedType === 't') {
         $("#input-a").show();
         $("#input-b").show();
         $("#input-c").show();
         $("#input-d").show();
         $("#input-e").hide();
         $("#input-f").hide();
-    }else if(selectedType === 'r'){
+    } else if (selectedType === 'r') {
         $("#input-a").show();
         $("#input-b").show();
         $("#input-c").hide();
         $("#input-d").hide();
         $("#input-e").hide();
         $("#input-f").hide();
-    } else{
+    } else {
         $("#input-a").show();
         $("#input-b").show();
         $("#input-c").show();
@@ -100,16 +114,16 @@ function secondStep() {
 
     console.log(b === '');
 
-    if(selectedType === 't'){
-        if(a === '' || b === '' || c === '' || d === '' || span === ''){
+    if (selectedType === 't') {
+        if (a === '' || b === '' || c === '' || d === '' || span === '') {
             return
         }
-    }else if(selectedType === 'r'){
-        if(a === '' || b === '' || span === ''){
+    } else if (selectedType === 'r') {
+        if (a === '' || b === '' || span === '') {
             return
         }
-    } else{
-        if(a === '' || b === '' || c === '' || d === '' || e === '' || f=== '' || span === ''){
+    } else {
+        if (a === '' || b === '' || c === '' || d === '' || e === '' || f === '' || span === '') {
             return
         }
     }
@@ -117,13 +131,13 @@ function secondStep() {
 }
 
 function thirdStep() {
-    if(loadType === 'uniform'){
+    if (loadType === 'uniform') {
         loadValues = [[0, parseFloat($('#uni-load-value').val())]];
-    }else {
+    } else {
         const locationFields = $('.point-location');
         const valueFields = $('.point-load');
         point_load_data = [];
-        for(let i=0; i< locationFields.length;i++){
+        for (let i = 0; i < locationFields.length; i++) {
             let temp = [parseFloat(locationFields[i].value), parseFloat(valueFields[i].value)];
             point_load_data.push(temp);
         }
@@ -141,6 +155,32 @@ function fourthStep() {
     supportsLocations = support_locations;
     moveStep(5);
 }
+
+function fifthStep() {
+    const crack_zones_count = parseInt($("#cracks-zone-count").val());
+
+    const startFields = $('.crack-zone-start');
+    const endFields = $('.crack-zone-end');
+    const spacingFields = $('.crack-spacing');
+    const widthFields = $('.crack-width');
+    const depthFields = $('.crack-depth');
+
+        let crack_zones = [];
+    for (let i = 0; i < crack_zones_count; i++) {
+        let temp = {
+            "name": 'Zone '+(i+1).toString(),
+            "start": parseFloat(startFields[i].value),
+            "end": parseFloat(endFields[i].value),
+            "spacing": parseFloat(spacingFields[i].value),
+            "width": parseFloat(widthFields[i].value),
+            "depth": parseFloat(depthFields[i].value)
+        };
+        crack_zones.push(temp);
+    }
+    console.log(crack_zones);
+    crackZones = crack_zones;
+}
+
 
 function scaling(input, scale) {
     let temp = [];
@@ -160,34 +200,45 @@ function scalingPointLoads(input, scale) {
     return temp;
 }
 
-function buildDataObject(){
+function scalingCrackData(crackData, scale_x, scale_y) {
+    let temp = [];
+    crackData.forEach(function (item) {
+        item['start'] = item['start'] * scale_x;
+        item['end'] = item['end'] * scale_x;
+        item['spacing'] = item['spacing'] * scale_x;
+        item['width'] = item['width'] * scale_x;
+        item['depth'] = item['depth'] * scale_y;
+        temp.push(item);
+    });
+    return temp;
+}
+
+function buildDataObject() {
 
     let cross_scale_val = scale();
 
     beamData["beamType"] = selectedType;
 
     beamData['scale_cross'] = cross_scale_val;
-    beamData['scale_span'] = (cross_scale_val*parseFloat(span))>1000 ? 1000/parseFloat(span): cross_scale_val;
+    beamData['scale_span'] = (cross_scale_val * parseFloat(span)) > 1000 ? 1000 / parseFloat(span) : cross_scale_val;
 
-    beamData["geometricData"]['a'] = parseFloat(a)*cross_scale_val;
-    beamData["geometricData"]['b'] = parseFloat(b)*cross_scale_val;
-    beamData["geometricData"]['c'] = parseFloat(c)*cross_scale_val;
-    beamData["geometricData"]['d'] = parseFloat(d)*cross_scale_val;
-    beamData["geometricData"]['e'] = parseFloat(e)*cross_scale_val;
-    beamData["geometricData"]['f'] = parseFloat(f)*cross_scale_val;
-    beamData["geometricData"]['span'] = parseFloat(span)*beamData['scale_span'];
+    beamData["geometricData"]['a'] = parseFloat(a) * cross_scale_val;
+    beamData["geometricData"]['b'] = parseFloat(b) * cross_scale_val;
+    beamData["geometricData"]['c'] = parseFloat(c) * cross_scale_val;
+    beamData["geometricData"]['d'] = parseFloat(d) * cross_scale_val;
+    beamData["geometricData"]['e'] = parseFloat(e) * cross_scale_val;
+    beamData["geometricData"]['f'] = parseFloat(f) * cross_scale_val;
+    beamData["geometricData"]['span'] = parseFloat(span) * beamData['scale_span'];
 
     beamData["loads"]['type'] = loadType;
     beamData["loads"]['data'] = scalingPointLoads(loadValues, beamData['scale_span']);
 
     beamData["supportLocations"] = scaling(supportsLocations, beamData['scale_span']);
-    beamData["cracks"]["spacing"] = parseInt($("#crack-spacing").val());
-    beamData["cracks"]["width"] = parseInt($("#crack-width").val());
-    beamData["cracks"]["depth"] = parseInt($("#crack-depth").val());
+    beamData["crackZones"] = scalingCrackData(crackZones,beamData['scale_span'],beamData['scale_cross']);
 
 }
 
-function moveStep(step){
+function moveStep(step) {
     $('#step-1').hide();
     $('#step-2').hide();
     $('#step-3').hide();
@@ -200,8 +251,8 @@ function moveStep(step){
     $('#step-indicator-4').removeClass('active');
     $('#step-indicator-5').removeClass('active');
 
-    $('#step-'+step).show();
-    $('#step-indicator-'+step).addClass('active');
+    $('#step-' + step).show();
+    $('#step-indicator-' + step).addClass('active');
 }
 
 function changeLoadType(type) {
@@ -212,8 +263,8 @@ function changeLoadType(type) {
 function addPointLoadInputField() {
     const count = parseInt($("#point-load-count").val());
     let content = '';
-    for(let i =0; i<count; i++){
-        content+= '<div class="row p-2">\n' +
+    for (let i = 0; i < count; i++) {
+        content += '<div class="row p-2">\n' +
             '                            <div class="col-3"></div>\n' +
             '                            <div class="col-3">\n' +
             '                                <input type="number" class="form-control point-location" min="0" >\n' +
@@ -231,8 +282,8 @@ function addPointLoadInputField() {
 function addSupports() {
     const count = parseInt($("#supports-count").val());
     let content = '';
-    for(let i =0; i<count; i++){
-        content+= '<div class="row p-2">\n' +
+    for (let i = 0; i < count; i++) {
+        content += '<div class="row p-2">\n' +
             '                    <div class="col-4"></div>\n' +
             '                    <div class="col-4">\n' +
             '                        <input type="number" class="form-control support-location" min="0" >\n' +
@@ -244,27 +295,61 @@ function addSupports() {
     $('#supports-inputs').html(content);
 }
 
-function scale(){
+function addCracks() {
+    const count = parseInt($("#cracks-zone-count").val());
+    let content = '';
+    for (let i = 1; i < count+1; i++) {
+        content += ' <div class="row p-2">\n' +
+            '                            <div class="col-2 text-center h6 pt-2">\n' +
+            '                                Zone '+i.toString()+'\n' +
+            '                                <input type="number" class="form-control crack-zone-number" min="0" value="'+i.toString()+'" hidden>\n' +
+            '                            </div>\n' +
+            '                            <div class="col-2">\n' +
+            '                                <input type="number" class="form-control crack-zone-start" min="0" autofocus>\n' +
+            '                            </div>\n' +
+            '                            <div class="col-2 text-center">\n' +
+            '                                <input type="number" class="form-control crack-zone-end" min="0">\n' +
+            '                            </div>\n' +
+            '                            <div class="col-2">\n' +
+            '                                <input type="number" class="form-control crack-spacing" min="0">\n' +
+            '                            </div>\n' +
+            '                            <div class="col-2">\n' +
+            '                                <input type="number" class="form-control crack-depth" min="0">\n' +
+            '                            </div>\n' +
+            '                            <div class="col-2">\n' +
+            '                                <input type="number" class="form-control crack-width" min="0">\n' +
+            '                            </div>\n' +
+            '                        </div>';
+    }
+    $('#cracks-zone-inputs').html(content);
+}
+
+function scale() {
     let type = selectedType;
     let width = 0;
     let height = 0;
-    if(type === 'r'){
+    if (type === 'r') {
         height = parseFloat(b);
         width = parseFloat(a);
-    }else if(type === 't'){
-        height = parseFloat(b)+parseFloat(c);
+    } else if (type === 't') {
+        height = parseFloat(b) + parseFloat(c);
         width = parseFloat(a);
-    }else if(type === 'i'){
-        height = parseFloat(b)+parseFloat(c)+parseFloat(e);
-        width = parseFloat(a)>parseFloat(f)? parseFloat(a) : parseFloat(f);
+    } else if (type === 'i') {
+        height = parseFloat(b) + parseFloat(c) + parseFloat(e);
+        width = parseFloat(a) > parseFloat(f) ? parseFloat(a) : parseFloat(f);
     }
-    return Math.min(200/width, 200/height);
+    return Math.min(200 / width, 200 / height);
 
 }
 
 function visualize() {
+    // Collecting 5th step data
+    fifthStep();
+
+    // Build the data json with all data
     this.buildDataObject();
 
+    // Change the display
     $('#readings').hide();
     $('#display').show();
 
@@ -282,7 +367,7 @@ function goBack() {
     $('#display').hide();
 }
 
-function createSVG(container_id,width, height){
+function createSVG(container_id, width, height) {
     let svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
     svg.setAttribute('version', '1.1');
@@ -296,8 +381,8 @@ function createSVG(container_id,width, height){
     svg.setAttribute('width', width);
     svg.style.display = 'block';
     svg.style.margin = 'auto';
-    let marginVal = (300 - height)/2;
-    document.getElementById(container_id+'-title').style.marginTop = marginVal.toString()+'px'
+    let marginVal = (300 - height) / 2;
+    document.getElementById(container_id + '-title').style.marginTop = marginVal.toString() + 'px'
     canvas.appendChild(svg);
     return svg;
 }
@@ -313,10 +398,10 @@ function drawPolygon(points, fill = "gray", stroke = 'none') {
 
 function initialPoints(dataJson, x_shift = 0, y_shift = 0) {
     let dimensions = dataJson['geometricData'];
-    let points = [0,0];
-    if(dimensions['a']<dimensions['f']){
+    let points = [0, 0];
+    if (dimensions['a'] < dimensions['f']) {
         let diff = dimensions['f'] - dimensions['a'];
-        points[0] = diff/2;
+        points[0] = diff / 2;
     }
     points[0] += x_shift;
     points[1] += y_shift;
@@ -335,114 +420,114 @@ function drawCrossSection(dataJson) {
     let x = [initials[0]];
     let y = [initials[1]];
 
-    if(type === 'r'){
+    if (type === 'r') {
         //B
-        x.push(x[0]+dimensions['a']);
+        x.push(x[0] + dimensions['a']);
         y.push(y[0]);
 
         //C
-        x.push(x[0]+dimensions['a']);
-        y.push(y[0]+dimensions['b']);
+        x.push(x[0] + dimensions['a']);
+        y.push(y[0] + dimensions['b']);
 
         //D
         x.push(x[0]);
-        y.push(y[0]+dimensions['b']);
+        y.push(y[0] + dimensions['b']);
 
         height = dimensions['b'];
         width = dimensions['a'];
 
-    }else if(type === 't'){
+    } else if (type === 't') {
         //B
-        x.push(x[0]+dimensions['a']);
+        x.push(x[0] + dimensions['a']);
         y.push(y[0]);
 
         //C
-        x.push(x[0]+dimensions['a']);
-        y.push(y[0]+dimensions['b']);
+        x.push(x[0] + dimensions['a']);
+        y.push(y[0] + dimensions['b']);
 
         //D
-        x.push(x[0]+((dimensions['a']+dimensions['d'])/2));
-        y.push(y[0]+dimensions['b']);
+        x.push(x[0] + ((dimensions['a'] + dimensions['d']) / 2));
+        y.push(y[0] + dimensions['b']);
 
         //E
-        x.push(x[0]+((dimensions['a']+dimensions['d'])/2));
-        y.push(y[0]+dimensions['b']+dimensions['c']);
+        x.push(x[0] + ((dimensions['a'] + dimensions['d']) / 2));
+        y.push(y[0] + dimensions['b'] + dimensions['c']);
 
         //J
-        x.push(x[0]+((dimensions['a']-dimensions['d'])/2));
-        y.push(y[0]+dimensions['b']+dimensions['c']);
+        x.push(x[0] + ((dimensions['a'] - dimensions['d']) / 2));
+        y.push(y[0] + dimensions['b'] + dimensions['c']);
 
         //K
-        x.push(x[0]+((dimensions['a']-dimensions['d'])/2));
-        y.push(y[0]+dimensions['b']);
+        x.push(x[0] + ((dimensions['a'] - dimensions['d']) / 2));
+        y.push(y[0] + dimensions['b']);
 
         //L
         x.push(x[0]);
-        y.push(y[0]+dimensions['b']);
+        y.push(y[0] + dimensions['b']);
 
-        height = dimensions['b']+dimensions['c'];
+        height = dimensions['b'] + dimensions['c'];
         width = dimensions['a'];
 
-    }else if(type === 'i'){
+    } else if (type === 'i') {
         //B
-        x.push(x[0]+dimensions['a']);
+        x.push(x[0] + dimensions['a']);
         y.push(y[0]);
 
         //C
-        x.push(x[0]+dimensions['a']);
-        y.push(y[0]+dimensions['b']);
+        x.push(x[0] + dimensions['a']);
+        y.push(y[0] + dimensions['b']);
 
         //D
-        x.push(x[0]+((dimensions['a']+dimensions['d'])/2));
-        y.push(y[0]+dimensions['b']);
+        x.push(x[0] + ((dimensions['a'] + dimensions['d']) / 2));
+        y.push(y[0] + dimensions['b']);
 
         //E
-        x.push(x[0]+((dimensions['a']+dimensions['d'])/2));
-        y.push(y[0]+dimensions['b']+dimensions['c']);
+        x.push(x[0] + ((dimensions['a'] + dimensions['d']) / 2));
+        y.push(y[0] + dimensions['b'] + dimensions['c']);
 
         //F
-        x.push(x[0]+((dimensions['a']+dimensions['f'])/2));
-        y.push(y[0]+dimensions['b']+dimensions['c']);
+        x.push(x[0] + ((dimensions['a'] + dimensions['f']) / 2));
+        y.push(y[0] + dimensions['b'] + dimensions['c']);
 
         //G
-        x.push(x[0]+((dimensions['a']+dimensions['f'])/2));
-        y.push(y[0]+dimensions['b']+dimensions['c']+dimensions['e']);
+        x.push(x[0] + ((dimensions['a'] + dimensions['f']) / 2));
+        y.push(y[0] + dimensions['b'] + dimensions['c'] + dimensions['e']);
 
         //H
-        x.push(x[0]+((dimensions['a']-dimensions['f'])/2));
-        y.push(y[0]+dimensions['b']+dimensions['c']+dimensions['e']);
+        x.push(x[0] + ((dimensions['a'] - dimensions['f']) / 2));
+        y.push(y[0] + dimensions['b'] + dimensions['c'] + dimensions['e']);
 
         //I
-        x.push(x[0]+((dimensions['a']-dimensions['f'])/2));
-        y.push(y[0]+dimensions['b']+dimensions['c']);
+        x.push(x[0] + ((dimensions['a'] - dimensions['f']) / 2));
+        y.push(y[0] + dimensions['b'] + dimensions['c']);
 
         //J
-        x.push(x[0]+((dimensions['a']-dimensions['d'])/2));
-        y.push(y[0]+dimensions['b']+dimensions['c']);
+        x.push(x[0] + ((dimensions['a'] - dimensions['d']) / 2));
+        y.push(y[0] + dimensions['b'] + dimensions['c']);
 
         //K
-        x.push(x[0]+((dimensions['a']-dimensions['d'])/2));
-        y.push(y[0]+dimensions['b']);
+        x.push(x[0] + ((dimensions['a'] - dimensions['d']) / 2));
+        y.push(y[0] + dimensions['b']);
 
         //L
         x.push(x[0]);
-        y.push(y[0]+dimensions['b']);
+        y.push(y[0] + dimensions['b']);
 
-        height = dimensions['b']+dimensions['c']+dimensions['e'];
-        width = dimensions['a']>dimensions['f']? dimensions['a'] : dimensions['f'];
+        height = dimensions['b'] + dimensions['c'] + dimensions['e'];
+        width = dimensions['a'] > dimensions['f'] ? dimensions['a'] : dimensions['f'];
     }
     let points = "";
-    for(let i=0; i<x.length; i++){
+    for (let i = 0; i < x.length; i++) {
         points += x[i].toString() + ',' + y[i].toString() + ' ';
     }
 
-    let svg = createSVG('cross-section',width,height);
+    let svg = createSVG('cross-section', width, height);
     svg.appendChild(drawPolygon(points));
 }
 
-function drawLongitudinalSection(dataJson){
+function drawLongitudinalSection(dataJson) {
     let type = dataJson['beamType'];
-    let initials = initialPoints(dataJson,20, 50);
+    let initials = initialPoints(dataJson, 20, 50);
     let dimensions = dataJson['geometricData'];
     let height;
     let width = dimensions['span'];
@@ -450,7 +535,7 @@ function drawLongitudinalSection(dataJson){
     let x = [initials[0]];
     let y = [initials[1]];
 
-    if(type === 'r') {
+    if (type === 'r') {
 
         //B
         x.push(x[0] + dimensions['span']);
@@ -465,7 +550,7 @@ function drawLongitudinalSection(dataJson){
         y.push(y[0] + dimensions['b']);
 
         height = dimensions['b'];
-    }else if(type === 't') {
+    } else if (type === 't') {
 
         //B
         x.push(x[0] + dimensions['span']);
@@ -479,7 +564,7 @@ function drawLongitudinalSection(dataJson){
         x.push(x[0]);
         y.push(y[0] + dimensions['b'] + dimensions['c']);
         height = dimensions['b'] + dimensions['c'];
-    }else {
+    } else {
 
         //B
         x.push(x[0] + dimensions['span']);
@@ -496,51 +581,51 @@ function drawLongitudinalSection(dataJson){
     }
 
     let points = "";
-    for(let i=0; i<x.length; i++){
+    for (let i = 0; i < x.length; i++) {
         points += x[i].toString() + ',' + y[i].toString() + ' ';
     }
-    let svg = createSVG('longitudinal-section',width+80,height+100);
+    let svg = createSVG('longitudinal-section', width + 80, height + 100);
     svg.appendChild(drawPolygon(points));
-    drawSupports(dataJson,svg);
-    if(dataJson['loads']['type'] === "uniform"){
+    drawSupports(dataJson, svg);
+    if (dataJson['loads']['type'] === "uniform") {
         drawUniformLoads(dataJson, svg);
-    }else if(dataJson['loads']['type'] === "point"){
+    } else if (dataJson['loads']['type'] === "point") {
         drawPointLoads(dataJson, svg);
     }
 }
 
 //Draw Supports
-function drawSupports(dataJson,svg) {
+function drawSupports(dataJson, svg) {
     let dimensions = dataJson['geometricData'];
     let supportLocations = dataJson['supportLocations'];
     let initials = initialPoints(dataJson, 20, 50);
     let type = dataJson['beamType'];
     let y = initials[1];
-    if(type === 'r'){
-        y+= dimensions['b'];
-    }else if(type === 't'){
-        y+= (dimensions['b']+dimensions['c']);
-    }else if(type === 'i'){
-        y+= (dimensions['b']+dimensions['c']+dimensions['e']);
+    if (type === 'r') {
+        y += dimensions['b'];
+    } else if (type === 't') {
+        y += (dimensions['b'] + dimensions['c']);
+    } else if (type === 'i') {
+        y += (dimensions['b'] + dimensions['c'] + dimensions['e']);
     }
-    for(let i=0; i<supportLocations.length; i++){
+    for (let i = 0; i < supportLocations.length; i++) {
         let x = initials[0] + supportLocations[i];
-        svg.appendChild(generateSupportCoordinates(x,y));
+        svg.appendChild(generateSupportCoordinates(x, y));
     }
 
 }
 
 
-function generateSupportCoordinates(initial_x,initial_y) {
+function generateSupportCoordinates(initial_x, initial_y) {
 
     x = [initial_x];
     y = [initial_y];
-    x.push(initial_x+15);
-    y.push(initial_y+35);
-    x.push(initial_x-15);
-    y.push(initial_y+35);
+    x.push(initial_x + 15);
+    y.push(initial_y + 35);
+    x.push(initial_x - 15);
+    y.push(initial_y + 35);
     let supports = "";
-    for(let i=0; i<x.length; i++){
+    for (let i = 0; i < x.length; i++) {
         supports += x[i].toString() + ',' + y[i].toString() + ' ';
     }
     return drawPolygon(supports, "blue");
@@ -551,33 +636,33 @@ function drawPointLoads(dataJson, svg) {
     let pointDimensions = dataJson['loads']['data'];
     let initials = initialPoints(dataJson, 20, 50);
     let y = initials[1];
-    for(let i=0; i<pointDimensions.length; i++){
+    for (let i = 0; i < pointDimensions.length; i++) {
         let x = initials[0] + pointDimensions[i][0];
-        svg.appendChild(generatePointLoadCoordinates(x,y));
+        svg.appendChild(generatePointLoadCoordinates(x, y));
     }
 }
 
-function generatePointLoadCoordinates(initial_x,initial_y) {
+function generatePointLoadCoordinates(initial_x, initial_y) {
 
     x = [initial_x];
     y = [initial_y];
-    x.push(initial_x+10);
-    y.push(initial_y-15);
-    x.push(initial_x+5);
-    y.push(initial_y-15);
-    x.push(initial_x+5);
-    y.push(initial_y-50);
-    x.push(initial_x-5);
-    y.push(initial_y-50);
-    x.push(initial_x-5)
-    y.push(initial_y-15);
-    x.push(initial_x-10);
-    y.push(initial_y-15);
+    x.push(initial_x + 10);
+    y.push(initial_y - 15);
+    x.push(initial_x + 5);
+    y.push(initial_y - 15);
+    x.push(initial_x + 5);
+    y.push(initial_y - 50);
+    x.push(initial_x - 5);
+    y.push(initial_y - 50);
+    x.push(initial_x - 5)
+    y.push(initial_y - 15);
+    x.push(initial_x - 10);
+    y.push(initial_y - 15);
     let supports = "";
-    for(let i=0; i<x.length; i++){
+    for (let i = 0; i < x.length; i++) {
         supports += x[i].toString() + ',' + y[i].toString() + ' ';
     }
-    return drawPolygon(supports,"blue");
+    return drawPolygon(supports, "blue");
 }
 
 //Draw Uniform Loads
@@ -585,51 +670,51 @@ function drawUniformLoads(dataJson, svg) {
     let dimensions = dataJson['geometricData'];
     let span = dimensions['span'];
     let arrow_count = 20;
-    let divider = span/arrow_count;
+    let divider = span / arrow_count;
     let initials = initialPoints(dataJson, 20, 50);
     let y = initials[1];
-    for(let i=0; i<=arrow_count; i++){
+    for (let i = 0; i <= arrow_count; i++) {
         let x = initials[0];
-        x += divider*i;
-        svg.appendChild(generateUniformLoadCoordinates(x,y));
+        x += divider * i;
+        svg.appendChild(generateUniformLoadCoordinates(x, y));
     }
     //draw horizontal line
-    x = [initials[0]-3];
-    y = [initials[1]-25]; //100 - 40
-    x.push(initials[0]-3);
-    y.push(initials[1]-30);
-    x.push(initials[0]+3+span);
-    y.push(initials[1]-30);
-    x.push(initials[0]+3+span);
-    y.push(initials[1]-25);
+    x = [initials[0] - 3];
+    y = [initials[1] - 25]; //100 - 40
+    x.push(initials[0] - 3);
+    y.push(initials[1] - 30);
+    x.push(initials[0] + 3 + span);
+    y.push(initials[1] - 30);
+    x.push(initials[0] + 3 + span);
+    y.push(initials[1] - 25);
 
     let supports = "";
 
-    for(let i=0; i<x.length; i++){
+    for (let i = 0; i < x.length; i++) {
         supports += x[i].toString() + ',' + y[i].toString() + ' ';
     }
-    svg.appendChild(drawPolygon(supports,"blue"));
+    svg.appendChild(drawPolygon(supports, "blue"));
 }
 
-function generateUniformLoadCoordinates(initial_x,initial_y) {
+function generateUniformLoadCoordinates(initial_x, initial_y) {
 
     x = [initial_x];
     y = [initial_y];
-    x.push(initial_x+5);
-    y.push(initial_y-10);
-    x.push(initial_x+2);
-    y.push(initial_y-10);
-    x.push(initial_x+2);
-    y.push(initial_y-25);
-    x.push(initial_x-2);
-    y.push(initial_y-25);
-    x.push(initial_x-2);
-    y.push(initial_y-10);
-    x.push(initial_x-5);
-    y.push(initial_y-10);
+    x.push(initial_x + 5);
+    y.push(initial_y - 10);
+    x.push(initial_x + 2);
+    y.push(initial_y - 10);
+    x.push(initial_x + 2);
+    y.push(initial_y - 25);
+    x.push(initial_x - 2);
+    y.push(initial_y - 25);
+    x.push(initial_x - 2);
+    y.push(initial_y - 10);
+    x.push(initial_x - 5);
+    y.push(initial_y - 10);
     let supports = "";
-    for(let i=0; i<x.length; i++){
+    for (let i = 0; i < x.length; i++) {
         supports += x[i].toString() + ',' + y[i].toString() + ' ';
     }
-    return drawPolygon(supports,"blue");
+    return drawPolygon(supports, "blue");
 }

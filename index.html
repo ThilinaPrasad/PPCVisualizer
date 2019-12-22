@@ -108,11 +108,11 @@
                     <p class="text-center text-warning h5 pb-2">Please select your type of the beam</p>
                     <div class="row m-2">
                         <div class="mx-auto d-block">
-                            <img src="img/i.png" class="btn btn-outline-warning p-4" id="type-i"
+                            <img src="img/i.png" class="btn btn-outline-warning p-4 beam-type animation" id="type-i"
                                  onclick="selectType('i')">
-                            <img src="img/t.png" class="btn btn-outline-warning p-4" id="type-t"
+                            <img src="img/t.png" class="btn btn-outline-warning p-4 beam-type animation" id="type-t"
                                  onclick="selectType('t')">
-                            <img src="img/r.png" class="btn btn-outline-warning p-4" id="type-r"
+                            <img src="img/r.png" class="btn btn-outline-warning p-4 beam-type animation" id="type-r"
                                  onclick="selectType('r')">
                         </div>
                     </div>
@@ -350,35 +350,83 @@
 
                     <h2 class="text-center pb-4">Cracks in beam</h2>
 
-                    <div class="row p-2 ">
-                        <div class="col-3 text-right h3">Spacing</div>
-                        <div class="col-6">
-                            <input type="number" class="form-control" min="0" autofocus id="crack-spacing">
+
+                    <h5 align="center" class="mt-3">No. of Crack Zones</h5>
+                    <div class="row p-2">
+                        <div class="col-4 text-right h3"></div>
+                        <div class="col-4">
+                            <input type="number" class="form-control text-center" min="1" autofocus id="cracks-zone-count"
+                                   value="1" onkeyup="addCracks()" onchange="addCracks()">
                         </div>
-                        <div class="col-3 text-left pt-2 pl-0">
-                            <label class='h5'>m</label>
-                            <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a></div>
+                        <div class="col-4 text-left pt-2 pl-0"></div>
                     </div>
 
-                    <div class="row p-2 ">
-                        <div class="col-3 text-right h3">Width</div>
-                        <div class="col-6">
-                            <input type="number" class="form-control" min="0" autofocus id="crack-width">
+                    <div class="row p-2 mt-2">
+                        <div class="col-2"></div>
+                        <div class="col-2 text-center h6">Start Location(m)</div>
+                        <div class="col-2 text-center h6">
+                            End Location(m)
                         </div>
-                        <div class="col-3 text-left pt-2 pl-0">
-                            <label class='h5'>m</label>
-                            <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a></div>
+                        <div class="col-2 text-center h6">Spacing(m)</div>
+                        <div class="col-2 text-center h6"> Depth(m)</div>
+                        <div class="col-2 text-center h6">Width(m)</div>
                     </div>
 
-                    <div class="row p-2 ">
-                        <div class="col-3 text-right h3">Depth</div>
-                        <div class="col-6">
-                            <input type="number" class="form-control" min="0" autofocus id="crack-depth">
+                    <div id="cracks-zone-inputs">
+                        <div class="row p-2">
+                            <div class="col-2 text-center h6 pt-2">
+                                Zone 1
+                            </div>
+                            <div class="col-2">
+                                <input type="number" class="form-control crack-zone-start" min="0">
+                            </div>
+                            <div class="col-2 text-center">
+                                <input type="number" class="form-control crack-zone-end" min="0">
+                            </div>
+                            <div class="col-2">
+                                <input type="number" class="form-control crack-spacing" min="0">
+                            </div>
+                            <div class="col-2">
+                                <input type="number" class="form-control crack-depth" min="0">
+                            </div>
+                            <div class="col-2">
+                                <input type="number" class="form-control crack-width" min="0">
+                            </div>
                         </div>
-                        <div class="col-3 text-left pt-2 pl-0">
-                            <label class='h5'>m</label>
-                            <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a></div>
                     </div>
+
+
+                    <!--                    <h2 class="text-center pb-4">Cracks in beam</h2>-->
+
+<!--                    <div class="row p-2 ">-->
+<!--                        <div class="col-3 text-right h3">Spacing</div>-->
+<!--                        <div class="col-6">-->
+<!--                            <input type="number" class="form-control" min="0" autofocus id="crack-spacing">-->
+<!--                        </div>-->
+<!--                        <div class="col-3 text-left pt-2 pl-0">-->
+<!--                            <label class='h5'>m</label>-->
+<!--                            <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a></div>-->
+<!--                    </div>-->
+
+<!--                    <div class="row p-2 ">-->
+<!--                        <div class="col-3 text-right h3">Width</div>-->
+<!--                        <div class="col-6">-->
+<!--                            <input type="number" class="form-control" min="0" autofocus id="crack-width">-->
+<!--                        </div>-->
+<!--                        <div class="col-3 text-left pt-2 pl-0">-->
+<!--                            <label class='h5'>m</label>-->
+<!--                            <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a></div>-->
+<!--                    </div>-->
+
+<!--                    <div class="row p-2 ">-->
+<!--                        <div class="col-3 text-right h3">Depth</div>-->
+<!--                        <div class="col-6">-->
+<!--                            <input type="number" class="form-control" min="0" autofocus id="crack-depth">-->
+<!--                        </div>-->
+<!--                        <div class="col-3 text-left pt-2 pl-0">-->
+<!--                            <label class='h5'>m</label>-->
+<!--                            <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a></div>-->
+<!--                    </div>-->
 
                     <div class="row">
                         <div class="mx-auto d-block">
