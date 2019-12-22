@@ -514,7 +514,15 @@ function drawSupports(dataJson,svg) {
     let dimensions = dataJson['geometricData'];
     let supportLocations = dataJson['supportLocations'];
     let initials = initialPoints(dataJson, 20, 50);
-    let y = dimensions['b']+initials[1];
+    let type = dataJson['beamType'];
+    let y = initials[1];
+    if(type === 'r'){
+        y+= dimensions['b'];
+    }else if(type === 't'){
+        y+= (dimensions['b']+dimensions['c']);
+    }else if(type === 'i'){
+        y+= (dimensions['b']+dimensions['c']+dimensions['e']);
+    }
     for(let i=0; i<supportLocations.length; i++){
         let x = initials[0] + supportLocations[i];
         svg.appendChild(generateSupportCoordinates(x,y));
