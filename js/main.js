@@ -42,7 +42,8 @@ let beamData = {
         "end": 0,
         "spacing": 0,
         "width": 0,
-        "depth": 0
+        "depth": 0,
+        "color": '#000000'
     }],
     "scale_cross": 1,
     "scale_span": 1
@@ -72,6 +73,13 @@ function selectType(type) {
     beamTypes = {'i': 'I', 't': "T", 'r': 'Rectangular'}
 
     $('#selected-type').text('Selected Beam Type : ' + beamTypes[type] + ' Beam');
+    if(type === 'r'){
+        $('#dimensions-img').attr('src','img/r.png');
+    }else if(type === 't'){
+        $('#dimensions-img').attr('src','img/t.png');
+    }else if(type === 'i'){
+        $('#dimensions-img').attr('src','img/i.png');
+    }
 }
 
 function firstStep() {
@@ -111,8 +119,6 @@ function secondStep() {
     e = $("#e").val();
     f = $("#f").val();
     span = $("#span").val();
-
-    console.log(b === '');
 
     if (selectedType === 't') {
         if (a === '' || b === '' || c === '' || d === '' || span === '') {
@@ -164,23 +170,23 @@ function fifthStep() {
     const spacingFields = $('.crack-spacing');
     const widthFields = $('.crack-width');
     const depthFields = $('.crack-depth');
+    const colorFields = $('.crack-color');
 
-        let crack_zones = [];
+    let crack_zones = [];
     for (let i = 0; i < crack_zones_count; i++) {
         let temp = {
-            "name": 'Zone '+(i+1).toString(),
+            "name": 'Zone ' + (i + 1).toString(),
             "start": parseFloat(startFields[i].value),
             "end": parseFloat(endFields[i].value),
             "spacing": parseFloat(spacingFields[i].value),
             "width": parseFloat(widthFields[i].value),
-            "depth": parseFloat(depthFields[i].value)
+            "depth": parseFloat(depthFields[i].value),
+            "color": colorFields[i].value
         };
         crack_zones.push(temp);
     }
-    console.log(crack_zones);
     crackZones = crack_zones;
 }
-
 
 function scaling(input, scale) {
     let temp = [];
@@ -200,13 +206,13 @@ function scalingPointLoads(input, scale) {
     return temp;
 }
 
-function scalingCrackData(crackData, scale_x, scale_y) {
+function scalingCrackData(crackData, scale_x, scale_y)  {
     let temp = [];
     crackData.forEach(function (item) {
         item['start'] = item['start'] * scale_x;
         item['end'] = item['end'] * scale_x;
         item['spacing'] = item['spacing'] * scale_x;
-        item['width'] = item['width'] * scale_x;
+        item['width'] = item['width'] * scale_y * 20;
         item['depth'] = item['depth'] * scale_y;
         temp.push(item);
     });
@@ -234,7 +240,7 @@ function buildDataObject() {
     beamData["loads"]['data'] = scalingPointLoads(loadValues, beamData['scale_span']);
 
     beamData["supportLocations"] = scaling(supportsLocations, beamData['scale_span']);
-    beamData["crackZones"] = scalingCrackData(crackZones,beamData['scale_span'],beamData['scale_cross']);
+    beamData["crackZones"] = scalingCrackData(crackZones, beamData['scale_span'], beamData['scale_cross']);
 
 }
 
@@ -298,14 +304,10 @@ function addSupports() {
 function addCracks() {
     const count = parseInt($("#cracks-zone-count").val());
     let content = '';
-    for (let i = 1; i < count+1; i++) {
-        content += ' <div class="row p-2">\n' +
-            '                            <div class="col-2 text-center h6 pt-2">\n' +
-            '                                Zone '+i.toString()+'\n' +
-            '                                <input type="number" class="form-control crack-zone-number" min="0" value="'+i.toString()+'" hidden>\n' +
-            '                            </div>\n' +
+    for (let i = 1; i < count + 1; i++) {
+        content += '                        <div class="row p-2">\n' +
             '                            <div class="col-2">\n' +
-            '                                <input type="number" class="form-control crack-zone-start" min="0" autofocus>\n' +
+            '                                <input type="number" class="form-control crack-zone-start" min="0">\n' +
             '                            </div>\n' +
             '                            <div class="col-2 text-center">\n' +
             '                                <input type="number" class="form-control crack-zone-end" min="0">\n' +
@@ -319,7 +321,17 @@ function addCracks() {
             '                            <div class="col-2">\n' +
             '                                <input type="number" class="form-control crack-width" min="0">\n' +
             '                            </div>\n' +
-            '                        </div>';
+            '                            <div class="col-2 text-center">\n' +
+            '                                <select class="browser-default custom-select crack-color" style="background-color: #d50000;" onchange="setBackgroundColor(this);">\n' +
+            '                                    <option value="#d50000" style="color: white;background-color: #d50000;padding: 5px;font-weight: bold;" selected>&nbsp;&nbsp;</option>\n' +
+            '                                    <option value="#f57f17" style="color: white;background-color: #f57f17;padding: 5px;font-weight: bold;" >&nbsp;&nbsp;</option>\n' +
+            '                                    <option value="#000000" style="color: white;background-color: #000000;padding: 5px;font-weight: bold;" >&nbsp;&nbsp;</option>\n' +
+            '                                    <option value="#ffff00" style="color: white;background-color: #ffff00;padding: 5px;font-weight: bold;" >&nbsp;&nbsp;</option>\n' +
+            '                                    <option value="#3e2723" style="color: white;background-color: #3e2723;padding: 5px;font-weight: bold;" >&nbsp;&nbsp;</option>\n' +
+            '                                    <option value="#2e7d32" style="color: white;background-color: #2e7d32;padding: 5px;font-weight: bold;" >&nbsp;&nbsp;</option>\n' +
+            '                                </select>\n' +
+            '                            </div>\n' +
+            '                        </div>\n';
     }
     $('#cracks-zone-inputs').html(content);
 }
@@ -353,10 +365,8 @@ function visualize() {
     $('#readings').hide();
     $('#display').show();
 
-
     drawCrossSection(beamData);
     drawLongitudinalSection(beamData);
-    console.log(beamData);
 }
 
 function goBack() {
@@ -387,12 +397,12 @@ function createSVG(container_id, width, height) {
     return svg;
 }
 
-function drawPolygon(points, fill = "gray", stroke = 'none') {
+function drawPolygon(points, fill = "gray", stroke = 'none', stroke_width = '2') {
     const poly = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
     poly.setAttribute("points", points);
     poly.setAttribute("stroke", stroke);
     poly.setAttribute('fill', fill);
-    poly.setAttribute('stroke-width', '2');
+    poly.setAttribute('stroke-width', stroke_width);
     return poly;
 }
 
@@ -587,6 +597,7 @@ function drawLongitudinalSection(dataJson) {
     let svg = createSVG('longitudinal-section', width + 80, height + 100);
     svg.appendChild(drawPolygon(points));
     drawSupports(dataJson, svg);
+    generateCrackLocations(dataJson,svg);
     if (dataJson['loads']['type'] === "uniform") {
         drawUniformLoads(dataJson, svg);
     } else if (dataJson['loads']['type'] === "point") {
@@ -600,21 +611,13 @@ function drawSupports(dataJson, svg) {
     let supportLocations = dataJson['supportLocations'];
     let initials = initialPoints(dataJson, 20, 50);
     let type = dataJson['beamType'];
-    let y = initials[1];
-    if (type === 'r') {
-        y += dimensions['b'];
-    } else if (type === 't') {
-        y += (dimensions['b'] + dimensions['c']);
-    } else if (type === 'i') {
-        y += (dimensions['b'] + dimensions['c'] + dimensions['e']);
-    }
+    let y = initials[1]+getBeamHeight(dataJson);
     for (let i = 0; i < supportLocations.length; i++) {
         let x = initials[0] + supportLocations[i];
         svg.appendChild(generateSupportCoordinates(x, y));
     }
 
 }
-
 
 function generateSupportCoordinates(initial_x, initial_y) {
 
@@ -693,6 +696,7 @@ function drawUniformLoads(dataJson, svg) {
     for (let i = 0; i < x.length; i++) {
         supports += x[i].toString() + ',' + y[i].toString() + ' ';
     }
+
     svg.appendChild(drawPolygon(supports, "blue"));
 }
 
@@ -717,4 +721,83 @@ function generateUniformLoadCoordinates(initial_x, initial_y) {
         supports += x[i].toString() + ',' + y[i].toString() + ' ';
     }
     return drawPolygon(supports, "blue");
+}
+
+// Cracks
+function getBeamHeight(dataJson){
+    let dimensions = dataJson['geometricData'];
+    let type = dataJson['beamType'];
+    let y = 0;
+    if (type === 'r') {
+        y += dimensions['b'];
+    } else if (type === 't') {
+        y += (dimensions['b'] + dimensions['c']);
+    } else if (type === 'i') {
+        y += (dimensions['b'] + dimensions['c'] + dimensions['e']);
+    }
+    return y;
+}
+
+function generateCrackLocations(dataJson, svg) {
+    let crackData = dataJson['crackZones'];
+    let initials = initialPoints(dataJson, 20, 50);
+    let y = initials[1]+getBeamHeight(dataJson);
+    crackData.forEach((crackData) => {
+        let rounds = Math.abs(crackData['start'] - crackData['end']) / crackData['spacing'];
+        for(let i=1;i <rounds;i++){
+            let x = crackData['start'] + (crackData['spacing'] * i) + 20;
+            svg.appendChild(drawCracks(x,y,crackData['width'],crackData['depth'],crackData['color']));
+        }
+        svg.appendChild(drawCracks(crackData['start']+ 20,y,crackData['width'],crackData['depth'],crackData['color']));
+        svg.appendChild(drawCracks(crackData['end']+ 20,y,crackData['width'],crackData['depth'],crackData['color']));
+    });
+}
+
+function drawCracks(initial_x, initial_y, width, depth, color){
+    // A
+    let a = [initial_x, initial_y];
+    // B
+    let b = [(initial_x-(width/2)),initial_y];
+    // C
+    let c = [(initial_x-((3*width)/8)), (initial_y-(depth/4))];
+    // D
+    let d = [(initial_x-((width)/4)), (initial_y-(depth/2))];
+    // E
+    let e = [(initial_x-((width)/8)), (initial_y-(3*depth/4))];
+    // F
+    let f = [(initial_x), (initial_y-(depth))];
+    // G
+    let g = [(initial_x+((width)/8)), (initial_y-(3*depth/4))];
+    // H
+    let h = [(initial_x+((width)/4)), (initial_y-(depth/2))];
+    // I
+    let i = [(initial_x+((3*width)/8)), (initial_y-(depth/4))];
+    // J
+    let j = [(initial_x+(width/2)),initial_y];
+
+    // Widths
+    let w1 = width;
+    let w2 = Math.abs(c[0] - i[0]);
+    let w3 = Math.abs(d[0] - h[0]);
+
+    // Shifting
+    // 1
+    c[0] = c[0]+(w1/4);
+    i[0] = i[0]+(w1/4);
+
+    // 2
+    d[0] = d[0]-(w2/4);
+    h[0] = h[0]-(w2/4);
+
+    // 3
+    e[0] = e[0]+(w3/4);
+    g[0] = g[0]+(w3/4);
+
+    let points = a.join(' ') + ',' + b.join(' ') + ',' + c.join(' ') + ',' + d.join(' ') + ',' + e.join(' ') + ',' + f.join(' ') + ',' + i.join(' ') + ',' + j.join(' ');
+    console.log(points);
+    return drawPolygon(points, color);
+}
+
+function setBackgroundColor(element){
+    element.style.backgroundColor = element.value;
 }

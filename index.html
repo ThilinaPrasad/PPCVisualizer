@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="css/mdb.min.css">
     <!-- Your custom styles (optional) -->
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/colorpicker/colorPick.css">
+
 </head>
 <body style="overflow-x: hidden;">
 
@@ -132,7 +134,7 @@
                         </div>
                         <div class="col-3 text-left pt-2 pl-0">
                             <label class='h5'>m</label>
-                            <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a></div>
+                            <a href="#" class="text-warning" data-toggle="modal" data-target="#step-2-instructions"><i class="far fa-question-circle"></i></a></div>
                     </div>
 
                     <div class="row p-2" id="input-b">
@@ -142,7 +144,7 @@
                         </div>
                         <div class="col-3 text-left pt-2 pl-0">
                             <label class='h5'>m</label>
-                            <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a></div>
+                            <a href="#" class="text-warning" data-toggle="modal" data-target="#step-2-instructions"><i class="far fa-question-circle"></i></a></div>
                     </div>
 
                     <div class="row p-2" id="input-c">
@@ -152,7 +154,7 @@
                         </div>
                         <div class="col-3 text-left pt-2 pl-0">
                             <label class='h5'>m</label>
-                            <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a></div>
+                            <a href="#" class="text-warning" data-toggle="modal" data-target="#step-2-instructions"><i class="far fa-question-circle"></i></a></div>
                     </div>
 
                     <div class="row p-2" id="input-d">
@@ -162,7 +164,7 @@
                         </div>
                         <div class="col-3 text-left pt-2 pl-0">
                             <label class='h5'>m</label>
-                            <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a></div>
+                            <a href="#" class="text-warning" data-toggle="modal" data-target="#step-2-instructions"><i class="far fa-question-circle"></i></a></div>
                     </div>
 
                     <div class="row p-2" id="input-e">
@@ -172,7 +174,7 @@
                         </div>
                         <div class="col-3 text-left pt-2 pl-0">
                             <label class='h5'>m</label>
-                            <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a>
+                            <a href="#" class="text-warning" data-toggle="modal" data-target="#step-2-instructions"><i class="far fa-question-circle"></i></a>
                         </div>
                     </div>
 
@@ -183,7 +185,7 @@
                         </div>
                         <div class="col-3 text-left pt-2 pl-0">
                             <label class='h5'>m</label>
-                            <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a>
+                            <a href="#" class="text-warning" data-toggle="modal" data-target="#step-2-instructions"><i class="far fa-question-circle"></i></a>
                         </div>
                     </div>
 
@@ -194,7 +196,7 @@
                         </div>
                         <div class="col-3 text-left pt-2 pl-0">
                             <label class='h5'>m</label>
-                            <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a>
+                            <a href="#" class="text-warning" data-toggle="modal" data-target="#step-2-instructions"><i class="far fa-question-circle"></i></a>
                         </div>
                     </div>
 
@@ -209,6 +211,27 @@
                             </div>
                         </div>
                     </div>
+
+<!--                    step-2-instructions Instructions Data Modal-->
+                    <div class="modal fade" id="step-2-instructions" tabindex="-1" role="dialog" aria-labelledby="step-2-instructions"
+                         aria-hidden="true">
+
+                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Dimensions Instructions</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <img src="img/r.png" class="mx-auto d-block" id="dimensions-img">
+                                    <button type="button" class="btn btn-warning float-right" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
                 <div class="container" id="step-3">
@@ -355,14 +378,14 @@
                     <div class="row p-2">
                         <div class="col-4 text-right h3"></div>
                         <div class="col-4">
-                            <input type="number" class="form-control text-center" min="1" autofocus id="cracks-zone-count"
+                            <input type="number" class="form-control text-center" min="1" autofocus
+                                   id="cracks-zone-count"
                                    value="1" onkeyup="addCracks()" onchange="addCracks()">
                         </div>
                         <div class="col-4 text-left pt-2 pl-0"></div>
                     </div>
 
                     <div class="row p-2 mt-2">
-                        <div class="col-2"></div>
                         <div class="col-2 text-center h6">Start Location(m)</div>
                         <div class="col-2 text-center h6">
                             End Location(m)
@@ -370,13 +393,11 @@
                         <div class="col-2 text-center h6">Spacing(m)</div>
                         <div class="col-2 text-center h6"> Depth(m)</div>
                         <div class="col-2 text-center h6">Width(m)</div>
+                        <div class="col-2 text-center h6">Crack Color</div>
                     </div>
 
                     <div id="cracks-zone-inputs">
                         <div class="row p-2">
-                            <div class="col-2 text-center h6 pt-2">
-                                Zone 1
-                            </div>
                             <div class="col-2">
                                 <input type="number" class="form-control crack-zone-start" min="0">
                             </div>
@@ -392,41 +413,18 @@
                             <div class="col-2">
                                 <input type="number" class="form-control crack-width" min="0">
                             </div>
+                            <div class="col-2 text-center">
+                                <select class="browser-default custom-select crack-color" style="background-color: #d50000;" onchange="setBackgroundColor(this);">
+                                    <option value="#d50000" style="color: white;background-color: #d50000;padding: 5px;font-weight: bold;" selected>&nbsp;&nbsp;</option>
+                                    <option value="#f57f17" style="color: white;background-color: #f57f17;padding: 5px;font-weight: bold;" >&nbsp;&nbsp;</option>
+                                    <option value="#000000" style="color: white;background-color: #000000;padding: 5px;font-weight: bold;" >&nbsp;&nbsp;</option>
+                                    <option value="#ffff00" style="color: white;background-color: #ffff00;padding: 5px;font-weight: bold;" >&nbsp;&nbsp;</option>
+                                    <option value="#3e2723" style="color: white;background-color: #3e2723;padding: 5px;font-weight: bold;" >&nbsp;&nbsp;</option>
+                                    <option value="#2e7d32" style="color: white;background-color: #2e7d32;padding: 5px;font-weight: bold;" >&nbsp;&nbsp;</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
-
-
-                    <!--                    <h2 class="text-center pb-4">Cracks in beam</h2>-->
-
-<!--                    <div class="row p-2 ">-->
-<!--                        <div class="col-3 text-right h3">Spacing</div>-->
-<!--                        <div class="col-6">-->
-<!--                            <input type="number" class="form-control" min="0" autofocus id="crack-spacing">-->
-<!--                        </div>-->
-<!--                        <div class="col-3 text-left pt-2 pl-0">-->
-<!--                            <label class='h5'>m</label>-->
-<!--                            <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a></div>-->
-<!--                    </div>-->
-
-<!--                    <div class="row p-2 ">-->
-<!--                        <div class="col-3 text-right h3">Width</div>-->
-<!--                        <div class="col-6">-->
-<!--                            <input type="number" class="form-control" min="0" autofocus id="crack-width">-->
-<!--                        </div>-->
-<!--                        <div class="col-3 text-left pt-2 pl-0">-->
-<!--                            <label class='h5'>m</label>-->
-<!--                            <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a></div>-->
-<!--                    </div>-->
-
-<!--                    <div class="row p-2 ">-->
-<!--                        <div class="col-3 text-right h3">Depth</div>-->
-<!--                        <div class="col-6">-->
-<!--                            <input type="number" class="form-control" min="0" autofocus id="crack-depth">-->
-<!--                        </div>-->
-<!--                        <div class="col-3 text-left pt-2 pl-0">-->
-<!--                            <label class='h5'>m</label>-->
-<!--                            <a href="#" class="text-warning"><i class="far fa-question-circle"></i></a></div>-->
-<!--                    </div>-->
 
                     <div class="row">
                         <div class="mx-auto d-block">
@@ -441,6 +439,7 @@
                     </div>
 
                 </div>
+
 
             </div>
         </div>
@@ -491,6 +490,8 @@
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
 <!-- MDB core JavaScript -->
 <script type="text/javascript" src="js/mdb.min.js"></script>
+<!-- Color Picker -->
+<script src="https://use.fontawesome.com/25ea4f9d66.js"></script>
 <!-- Your custom scripts (optional) -->
 <script type="text/javascript" src="js/main.js"></script>
 </body>

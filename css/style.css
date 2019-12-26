@@ -18,46 +18,72 @@
     background: rgba(255, 196, 77, 0.1);
 }
 
-.nav-logo{
+.nav-logo {
     transform: rotate(-60deg);
 }
 
-#step-2, #step-3, #step-4, #step-5{
+#step-2, #step-3, #step-4, #step-5 {
     display: none;
 }
 
-#point-load-inputs, #supports-inputs{
+#point-load-inputs, #supports-inputs {
     max-height: 350px;
     overflow-x: hidden;
     overflow-y: scroll;
 }
 
-#display{
+#display {
     display: none;
     height: auto;
     position: relative;
     top: 70px;
 }
 
-#readings{
+#readings {
     /*display: none;*/
 }
 
-.mesh-background{
+.mesh-background {
     background: #ffff url("../img/background.png") repeat right top;
-    min-height: 350px!important;
+    min-height: 350px !important;
 }
 
-.beam-type{
+.beam-type {
     width: 200px;
     height: 200px;
 }
 
-.animation{
+.animation {
     transition: width 0.5s ease-in;
 }
 
-.beam-type-selected{
+.beam-type-selected {
     width: auto;
     height: auto;
+}
+
+#dimensions-img{
+    width: 400px;
+    height: 400px;
+}
+
+.colorPickSelector {
+    border-radius: 5px;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    -webkit-transition: all linear .2s;
+    -moz-transition: all linear .2s;
+    -ms-transition: all linear .2s;
+    -o-transition: all linear .2s;
+    transition: all linear .2s;
+}
+
+.colorPickSelector:hover { transform: scale(1.1); }
+
+.color-in-picker{
+    width: inherit;
+    height: inherit;
+    margin: 2px;
+    background-color: #0b2e13;
 }
