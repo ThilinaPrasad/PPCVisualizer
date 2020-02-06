@@ -263,7 +263,6 @@ function moveStep(step) {
 
 function changeLoadType(type) {
     loadType = type;
-    console.log(type);
 }
 
 function addPointLoadInputField() {
@@ -375,6 +374,7 @@ function goBack() {
     $("#longitudinal-section").children('svg').remove();
     $('#readings').show();
     $('#display').hide();
+    document.getElementById("load_value").innerHTML = '';
 }
 
 function createSVG(container_id, width, height) {
@@ -392,7 +392,7 @@ function createSVG(container_id, width, height) {
     svg.style.display = 'block';
     svg.style.margin = 'auto';
     let marginVal = (300 - height) / 2;
-    document.getElementById(container_id + '-title').style.marginTop = marginVal.toString() + 'px'
+    document.getElementById(container_id + '-title').style.marginTop = marginVal.toString() + 'px';
     canvas.appendChild(svg);
     return svg;
 }
@@ -403,6 +403,16 @@ function drawPolygon(points, fill = "gray", stroke = 'none', stroke_width = '2')
     poly.setAttribute("stroke", stroke);
     poly.setAttribute('fill', fill);
     poly.setAttribute('stroke-width', stroke_width);
+    return poly;
+}
+
+function drawPolygonWithText(points, loadVal) {
+    const poly = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+    poly.textContent = loadVal;
+    poly.setAttribute("points", points);
+    poly.setAttribute("stroke", 'none');
+    poly.setAttribute('fill', 'blue');
+    poly.setAttribute('stroke-width', '2');
     return poly;
 }
 
@@ -425,7 +435,6 @@ function drawCrossSection(dataJson) {
     let height;
     let width;
 
-
     // A
     let x = [initials[0]];
     let y = [initials[1]];
@@ -447,6 +456,7 @@ function drawCrossSection(dataJson) {
         width = dimensions['a'];
 
     } else if (type === 't') {
+
         //B
         x.push(x[0] + dimensions['a']);
         y.push(y[0]);
@@ -479,6 +489,7 @@ function drawCrossSection(dataJson) {
         width = dimensions['a'];
 
     } else if (type === 'i') {
+
         //B
         x.push(x[0] + dimensions['a']);
         y.push(y[0]);
@@ -526,6 +537,7 @@ function drawCrossSection(dataJson) {
         height = dimensions['b'] + dimensions['c'] + dimensions['e'];
         width = dimensions['a'] > dimensions['f'] ? dimensions['a'] : dimensions['f'];
     }
+
     let points = "";
     for (let i = 0; i < x.length; i++) {
         points += x[i].toString() + ',' + y[i].toString() + ' ';
@@ -533,9 +545,11 @@ function drawCrossSection(dataJson) {
 
     let svg = createSVG('cross-section', width, height);
     svg.appendChild(drawPolygon(points));
+
 }
 
 function drawLongitudinalSection(dataJson) {
+
     let type = dataJson['beamType'];
     let initials = initialPoints(dataJson, 20, 50);
     let dimensions = dataJson['geometricData'];
@@ -544,6 +558,37 @@ function drawLongitudinalSection(dataJson) {
     // A(Initial point)
     let x = [initials[0]];
     let y = [initials[1]];
+
+    let first_line_points = "";
+    let second_line_points = "";
+
+    if(type === 't' || type === 'i'){
+        // first line
+
+        let line_x_1 = [initials[0]];
+        let line_y_1 = [(initials[1] + dimensions['b'])];
+
+        line_x_1.push(initials[0] + dimensions['span']);
+        line_y_1.push((initials[1] + dimensions['b']));
+
+
+        for (let i = 0; i < line_x_1.length; i++) {
+            first_line_points += line_x_1[i].toString() + ',' + line_y_1[i].toString() + ' ';
+        }
+    }
+
+    if(type === 'i'){
+        // second line
+        let line_x_2 = [initials[0]];
+        let line_y_2 = [(initials[1] + dimensions['b'] + dimensions['c'])];
+
+        line_x_2.push(initials[0] + dimensions['span']);
+        line_y_2.push((initials[1] + dimensions['b'] + dimensions['c']));
+
+        for (let i = 0; i < line_x_2.length; i++) {
+            second_line_points += line_x_2[i].toString() + ',' + line_y_2[i].toString() + ' ';
+        }
+    }
 
     if (type === 'r') {
 
@@ -603,6 +648,22 @@ function drawLongitudinalSection(dataJson) {
     } else if (dataJson['loads']['type'] === "point") {
         drawPointLoads(dataJson, svg);
     }
+
+    if(type === 't' || type === 'i'){
+        svg.appendChild(drawPolygon(first_line_points, 'none', 'purple', '1'));
+    }
+
+    if(type === 'i'){
+        svg.appendChild(drawPolygon(second_line_points, 'none', 'purple', '1'));
+    }
+
+    if(dataJson['loads']['type'] === "uniform"){
+        console.log(dataJson['loads']['data'][0][1]);
+        document.getElementById("load_value").innerHTML = dataJson['loads']['data'][0][1] + "kN/m";
+    }else{
+
+    }
+
 }
 
 //Draw Supports
@@ -641,11 +702,11 @@ function drawPointLoads(dataJson, svg) {
     let y = initials[1];
     for (let i = 0; i < pointDimensions.length; i++) {
         let x = initials[0] + pointDimensions[i][0];
-        svg.appendChild(generatePointLoadCoordinates(x, y));
+        svg.appendChild(generatePointLoadCoordinates(x, y, (dataJson['loads']['data'][i][1] + "N")));
     }
 }
 
-function generatePointLoadCoordinates(initial_x, initial_y) {
+function generatePointLoadCoordinates(initial_x, initial_y, loadVal) {
 
     x = [initial_x];
     y = [initial_y];
@@ -665,7 +726,7 @@ function generatePointLoadCoordinates(initial_x, initial_y) {
     for (let i = 0; i < x.length; i++) {
         supports += x[i].toString() + ',' + y[i].toString() + ' ';
     }
-    return drawPolygon(supports, "blue");
+    return drawPolygonWithText(supports, loadVal);
 }
 
 //Draw Uniform Loads
@@ -794,7 +855,7 @@ function drawCracks(initial_x, initial_y, width, depth, color){
     g[0] = g[0]+(w3/4);
 
     let points = a.join(' ') + ',' + b.join(' ') + ',' + c.join(' ') + ',' + d.join(' ') + ',' + e.join(' ') + ',' + f.join(' ') + ',' + i.join(' ') + ',' + j.join(' ');
-    console.log(points);
+    // console.log(points);
     return drawPolygon(points, color);
 }
 
